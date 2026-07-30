@@ -94,7 +94,11 @@ Oxlint provides the baseline JavaScript and TypeScript correctness lint. `npm ru
 
 Prettier formats project-owned code and documentation. The committed `.prettierignore` excludes duplicated `.github/skills/` content and vendored `.codex/skills/**/references/` material so the fast gate does not repeatedly format externally maintained skill documentation. Project-owned skill entry points remain in the formatting baseline.
 
-Fallow provides advisory codebase readability diagnostics. `npm run diagnostics:readability` runs a changed-code audit for complexity, duplication, dependency hygiene, and cleanup findings while relaxing CRAP-score noise from untested tooling scripts. `npm run diagnostics:health` reports whole-repo health scoring, hotspots, and refactoring targets. `npm run diagnostics:codebase` runs both. These commands use `--no-cache`, so normal diagnostics do not create a persistent `.fallow/` cache. If a contributor runs cached Fallow commands manually, `.fallow/` is ignored and should stay untracked.
+Fallow provides advisory codebase readability diagnostics. `npm run diagnostics:readability` runs a changed-code audit for complexity, duplication, dependency hygiene, and cleanup findings while relaxing CRAP-score noise from untested tooling scripts. `npm run diagnostics:health` reports whole-repo health scoring, hotspots, refactoring targets, and advisory public-signature type coupling. `npm run diagnostics:codebase` runs both. These commands use Fallow's best-effort type-aware mode for exact-symbol evidence while leaving compiler diagnostics to `npm run typecheck` and local lint rules to Oxlint.
+
+`npm run diagnostics:map` generates a read-only interactive treemap and import graph at `.fallow/codebase-map.html`; open that file in a browser after generation. All diagnostic commands use `--no-cache`. The map is the only normal diagnostic artifact, and its ignored `.fallow/` location also contains any caches contributors create with manual Fallow commands.
+
+The project Fallow config ignores `typescript-7` because the typecheck script executes that aliased compiler directly from `node_modules` rather than importing it, and ignores the Stryker API package referenced only through tooling JSDoc types.
 
 The README includes a committed application screenshot at `docs/screenshots/home.png`. Refresh that asset manually when the starter UI changes materially, but keep screenshot capture out of the automated development loop, CI, and remote workflows.
 
@@ -102,7 +106,7 @@ Template update packs live under `.template/updates/`. Use them to port later te
 
 ## Write Boundaries
 
-Keep workflow write targets explicit and documented. Generated CSS belongs in `.generated/`, Prettier's disposable content cache belongs in `.cache/prettier`, Lighthouse reports belong in `reports/lighthouse/`, coverage reports belong in `reports/coverage/`, mutation reports belong in `reports/mutation/`, Stryker temporary sandboxes belong in `.stryker-tmp/`, optional Fallow caches belong in ignored `.fallow/`, Agent CI local caches belong under Agent CI's managed cache directory, template update packs belong in `.template/updates/`, the committed README screenshot belongs in `docs/screenshots/`, and local secrets belong in untracked files such as `.dev.vars` or `.env.agent-ci`.
+Keep workflow write targets explicit and documented. Generated CSS belongs in `.generated/`, Prettier's disposable content cache belongs in `.cache/prettier`, Lighthouse reports belong in `reports/lighthouse/`, coverage reports belong in `reports/coverage/`, mutation reports belong in `reports/mutation/`, Stryker temporary sandboxes belong in `.stryker-tmp/`, optional Fallow caches and the generated codebase map belong in ignored `.fallow/`, Agent CI local caches belong under Agent CI's managed cache directory, template update packs belong in `.template/updates/`, the committed README screenshot belongs in `docs/screenshots/`, and local secrets belong in untracked files such as `.dev.vars` or `.env.agent-ci`.
 
 When adding a new tool or workflow that writes files, document the target path in the same change and prefer ignored local output unless the artifact is intentionally reviewed.
 

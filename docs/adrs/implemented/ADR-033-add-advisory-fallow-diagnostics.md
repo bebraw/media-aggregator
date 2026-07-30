@@ -4,6 +4,8 @@
 
 **Date:** 2026-06-17
 
+**Amended by:** [ADR-045](./ADR-045-adopt-type-aware-fallow-diagnostics.md)
+
 ## Context
 
 The template already has a strict quality baseline: formatting, type checking,

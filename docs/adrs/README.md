@@ -76,6 +76,8 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-041](./implemented/ADR-041-cache-prettier-checks-by-content.md)                  | Implemented | Cache successful Prettier checks by content for faster repeated local gates.                   |
 | [ADR-042](./implemented/ADR-042-emit-quality-gate-progress.md)                        | Implemented | Emit named phase transitions and elapsed-time heartbeats from the full local quality gate.     |
 | [ADR-043](./implemented/ADR-043-make-local-mutation-opt-in.md)                        | Implemented | Keep mutation testing out of the baseline local gate and expose an explicit deep gate.         |
+| [ADR-044](./implemented/ADR-044-vendor-engineering-quality-skills.md)                 | Implemented | Vendor focused correctness, test, and debug skills as a reusable capability kit.               |
+| [ADR-045](./implemented/ADR-045-adopt-type-aware-fallow-diagnostics.md)               | Implemented | Use Fallow's stable type-aware evidence and expose its interactive codebase map.               |
 
 ## Creating A New ADR
 

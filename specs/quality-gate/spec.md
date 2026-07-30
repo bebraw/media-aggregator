@@ -18,6 +18,8 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - **Advisory codebase diagnostics:** `npm run diagnostics:codebase`
 - **Changed-code readability diagnostics:** `npm run diagnostics:readability`
 - **Whole-repo health diagnostics:** `npm run diagnostics:health`
+- **Interactive codebase map:** `npm run diagnostics:map`
+- **Fallow semantic policy:** best-effort type-aware analysis with exact-version packaged companion
 - **Full mutation gate:** `npm run mutation`
 - **Incremental mutation gate:** `npm run mutation:incremental`
 - **Full gate:** `npm run quality:gate`
@@ -69,7 +71,8 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - [ ] Repeated formatting checks reuse content-based results for unchanged files without weakening cold-run coverage.
 - [ ] The affected guardrail path scopes formatting, Oxlint, JavaScript syntax checks, Worker client-code checks, package audit, and unit tests to affected files when possible.
 - [ ] The affected test gate runs tests related to affected runtime files, runs affected unit test files directly, and falls back to full coverage for broad test environment changes or affected runtime files with no related tests.
-- [ ] The advisory codebase diagnostics report changed-code readability risk, whole-repo health, hotspots, duplication, and cleanup evidence without becoming part of the hard quality gate.
+- [ ] The advisory codebase diagnostics report changed-code readability risk, whole-repo health, hotspots, duplication, exact-symbol evidence, public-signature type coupling, and cleanup evidence without becoming part of the hard quality gate.
+- [ ] The interactive codebase map writes a self-contained HTML report under ignored `.fallow/` state without opening a browser automatically.
 - [ ] The browser gate covers the Playwright baseline.
 - [ ] The full mutation gate covers runtime `src/**/*.ts` files with Stryker, Vitest, and TypeScript checking.
 - [ ] The incremental mutation gate reuses prior Stryker results for explicit deep local runs while preserving a complete mutation report.
@@ -143,6 +146,9 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - Mutation reports and Stryker incremental data must be written under ignored `reports/`, and Stryker's temporary sandbox must stay under ignored `.stryker-tmp/`.
 - New workflow write targets must be documented when they are introduced.
 - Manually created Fallow caches must stay ignored under `.fallow/`.
+- The generated Fallow codebase map must stay ignored at `.fallow/codebase-map.html`.
+- Fallow's type-aware pass must remain best-effort and advisory; TypeScript compiler diagnostics stay owned by `npm run typecheck`, and local lint findings stay owned by Oxlint.
+- Fallow must ignore tool-only dependency aliases that repo scripts execute directly or reference only through tooling types instead of reporting them as unused runtime imports.
 
 ### Verification
 
@@ -169,6 +175,12 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - Given: a change is ready for review or a refactor target is unclear
 - When: the contributor runs `npm run diagnostics:codebase`
 - Then: Fallow reports changed-code readability risk, health scoring, hotspots, duplication, and cleanup evidence without replacing the baseline gate
+
+**Scenario: Contributor wants a codebase map**
+
+- Given: architecture or cleanup work needs a visual repository overview
+- When: the contributor runs `npm run diagnostics:map`
+- Then: Fallow writes a self-contained type-aware map to `.fallow/codebase-map.html` without opening a browser
 
 **Scenario: Contributor wants a fast baseline signal**
 
