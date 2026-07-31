@@ -42,6 +42,7 @@ copying unrelated starter structure.
   - `2026-07-16-opt-in-local-mutation`
   - `2026-07-22-engineering-quality-skills`
   - `2026-07-30-fallow-type-aware-diagnostics`
+  - `2026-07-31-cloudflare-mcp-skill-baseline`
 
 ### Anti-Patterns
 

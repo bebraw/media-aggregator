@@ -65,6 +65,13 @@
 - Require Agent CI when a change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when the user asks for full PR or release readiness.
 - Skip Agent CI for ordinary source, test, tooling, and documentation changes that do not cross those workflow-sensitive boundaries.
 
+## Cloudflare
+
+- Use the connected Cloudflare MCP for current product documentation, API discovery, and account operations.
+- Use the project-local [`workers-best-practices`](./.codex/skills/workers-best-practices/SKILL.md) skill when authoring or reviewing Worker code.
+- Use the project-local [`wrangler`](./.codex/skills/wrangler/SKILL.md) skill before running Wrangler commands.
+- Add product-specific Cloudflare skills only when the project adopts the corresponding product or workflow.
+
 ## Frontend Design
 
 - Use the project-local [`frontend-design`](./.codex/skills/frontend-design/SKILL.md) skill for substantial UI work such as page redesigns, component styling, app shells, and frontend experiments.
