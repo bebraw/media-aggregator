@@ -62,7 +62,7 @@ If local CI warns with `No such remote 'origin'`, add `GITHUB_REPO=owner/repo` t
 
 Agents following this repo's RTK requirement should invoke the workflow as `rtk proxy npm run ci:local` and retries as `rtk proxy npm run ci:local:retry -- --name <runner-name>`. RTK's proxy mode passes the NDJSON stream through live; its normal filtered mode may buffer this output until the command finishes.
 
-Use targeted checks while iterating, then run the full readiness path before proposing or landing a change:
+Use targeted checks while iterating, then run the checks that match the change before proposing or landing it:
 
 - Docs-only changes: `npm run format:check`
 - JavaScript or TypeScript changes: `npm run lint`
@@ -70,7 +70,10 @@ Use targeted checks while iterating, then run the full readiness path before pro
 - Runtime `src/` changes while iterating: `npm run typecheck` and `npm run test:affected`
 - Browser behavior or UI changes: `npm run quality:gate`
 - Readability, complexity, duplication, or cleanup review: `npm run diagnostics:codebase`
-- Baseline readiness: `npm run quality:gate` and `npm run ci:local`
+- Baseline readiness for non-documentation changes: `npm run quality:gate`
+- Workflow-sensitive changes or explicit full PR/release readiness: `npm run quality:gate` and `npm run ci:local`
+
+Workflow-sensitive changes include GitHub Actions workflows, package metadata or dependency installation, build or container setup, and browser CI setup. Ordinary source, test, and tooling changes that stay outside those boundaries do not require Agent CI. Documentation-only changes should use the smallest relevant checks unless they alter executable instructions or workflow contracts.
 
 The template now ships with a minimal Worker stub in `src/worker.ts`. `npm run dev` starts it on `http://127.0.0.1:8787`, and Playwright uses `npm run e2e:server` on `http://127.0.0.1:8788` so browser tests can run without extra setup. The e2e server forces Chokidar polling mode to avoid file-watcher exhaustion in macOS-hosted local runs while preserving the normal `npm run dev` developer loop. API modules live under `src/api/`, view modules live under `src/views/`, and tests are colocated under `src/`.
 
@@ -124,7 +127,7 @@ Use this expectation for routine changes:
 
 - `npm run quality:gate` must pass before a change is considered ready.
 - Use `npm run quality:gate:fast` for quicker local iteration when browser coverage is not the immediate focus.
-- `npm run ci:local` should also pass before proposing or landing the change.
+- `npm run ci:local` should also pass when the change is workflow-sensitive or the user asks for full PR or release readiness.
 - The repo-managed `pre-push` hook runs `npm run quality:affected` automatically after `npm install`, so pushes stop locally when affected guardrails are already red.
 
 The baseline quality gate runs the fast gate first and then the Playwright browser tests. The explicit `quality:gate:deep` command adds incremental mutation testing for local assertion-strength feedback. Both commands print named phase transitions and an elapsed-time heartbeat every 30 seconds while a phase is still running, while preserving each child command's live output. GitHub Actions runs separate fast, browser, and full mutation jobs, with repository-shape validation included in the fast job. Local Agent CI runs should go through `npm run ci:local`, which prewarms through one stable install step before independent jobs run concurrently with isolated writable dependency views. The command emits structured lifecycle progress and pauses a failed runner for agent retry. Local browser installation should go through the pinned `npm run playwright:install` script.

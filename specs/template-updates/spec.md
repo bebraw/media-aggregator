@@ -85,7 +85,7 @@ copying unrelated starter structure.
 
 ### Verification
 
-- **Automated checks:** `npm run quality:gate` and `npm run ci:local`
+- **Automated check:** `npm run quality:gate`; add `npm run ci:local` only when an update pack changes a workflow-sensitive boundary
 - **Manifest parse:** `node -e "for (const f of require('node:fs').readdirSync('.template/updates')) { if (f !== 'README.md') JSON.parse(require('node:fs').readFileSync('.template/updates/' + f + '/update.json', 'utf8')) }"`
 - **Docs check:** `rg "template update|\\.template/updates|update pack"`
 - **Agent entrypoint:** `test -f .template/updates/AGENT_SYNC.md`

@@ -1,6 +1,6 @@
 # ADR-025: Skip Agent CI for Docs-Only Changes
 
-**Status:** Implemented
+**Status:** Superseded by [ADR-046](./ADR-046-scope-local-agent-ci-to-workflow-sensitive-changes.md)
 
 **Date:** 2026-05-25
 

@@ -65,7 +65,7 @@ The template is useful both as a starter repo and as a source of specific practi
 
 ### Verification
 
-- **Repo checks:** `npm run quality:gate` and `npm run ci:local`
+- **Repo check:** `npm run quality:gate`; add `npm run ci:local` only when a kit change crosses a workflow-sensitive boundary
 - **Manifest parse:** `node -e "JSON.parse(require('node:fs').readFileSync('.capabilities/agent-ci/manifest.json', 'utf8'))"`
 - **Docs check:** `rg "capability kits|\\.capabilities|Agent CI Capability Kit"`
 

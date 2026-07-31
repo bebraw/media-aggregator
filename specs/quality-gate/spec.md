@@ -48,8 +48,9 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - **Mutation config:** `stryker.config.mjs`
 - **Local mutation concurrency:** 50% of available parallelism
 - **GitHub mutation concurrency:** 100% of available parallelism
-- **Readiness baseline:** `npm run quality:gate` and `npm run ci:local` for non-documentation changes
-- **Documentation-only exception:** documentation-only changes may skip `npm run ci:local` when they do not alter executable config, generated artifacts, package metadata, source code, or tests
+- **Readiness baseline:** `npm run quality:gate` for non-documentation changes
+- **Local workflow requirement:** `npm run ci:local` for changes to GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, and explicit full PR or release readiness checks
+- **Local workflow exception:** ordinary source, test, tooling, and documentation changes may skip `npm run ci:local` when they do not cross a workflow-sensitive boundary
 
 ### Anti-Patterns
 
@@ -60,7 +61,8 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - Do not replace Prettier formatting or TypeScript project checking with Oxlint.
 - Do not enable broad Oxlint style, restriction, pedantic, or type-aware rule sets without an explicit decision and compatibility review.
 - Do not treat advisory Fallow diagnostics as a replacement for formatting, type checking, runtime audit, unit coverage, browser tests, mutation testing, or Worker-specific guardrails.
-- Do not treat targeted iteration checks as a replacement for the readiness baseline unless the change is documentation-only and qualifies for the documented Agent CI exception.
+- Do not treat targeted iteration checks as a replacement for `npm run quality:gate` on non-documentation changes.
+- Do not require Agent CI for changes that do not cross a documented workflow-sensitive boundary unless full PR or release readiness is explicitly requested.
 - Do not add undocumented workflow write targets for generated output, local state, caches, archives, or tool artifacts.
 
 ## Contract
@@ -82,7 +84,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - [ ] The repo-managed `pre-push` hook runs affected-file guardrails before a push leaves the machine.
 - [ ] Local and remote CI use the same split verification model for non-documentation changes.
 - [ ] Remote browser and mutation jobs avoid dependency installation and gate execution for known non-runtime-only changes.
-- [ ] Documentation-only changes can skip Agent CI when they do not alter executable behavior or workflow configuration.
+- [ ] Local Agent CI is required for workflow-sensitive changes and explicit full PR or release readiness, but not for ordinary changes outside those boundaries.
 - [ ] The spec is updated in the same change set.
 
 ### Regression Guardrails
@@ -136,8 +138,9 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - The local CI documentation must cover the no-`origin` case through `.env.agent-ci` and `GITHUB_REPO` instead of treating that warning as normal noise.
 - The local CI Docker daemon override must use Agent CI's `AGENT_CI_DOCKER_HOST` variable instead of the general Docker CLI `DOCKER_HOST` variable.
 - Local Playwright browser installation should go through a pinned repo script instead of ad hoc `npx playwright install ...` usage.
-- Targeted checks may be documented for iteration, but `npm run quality:gate` and `npm run ci:local` remain the readiness baseline for non-documentation changes.
-- Documentation-only changes may skip `npm run ci:local` when they do not alter executable config, generated artifacts, package metadata, source code, or tests.
+- Targeted checks may be documented for iteration, but `npm run quality:gate` remains the readiness baseline for non-documentation changes.
+- Local Agent CI must be required for changes to GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, and explicit full PR or release readiness checks.
+- Ordinary source, test, tooling, and documentation changes may skip `npm run ci:local` when they do not cross a workflow-sensitive boundary.
 - Mutation testing must exclude colocated tests, end-to-end tests, declarations, and `src/test-support.ts` from mutation.
 - Mutation testing must use the Vitest runner's per-test coverage analysis and related-test narrowing rather than an ad hoc minimization wrapper.
 - Mutation testing must set Stryker worker concurrency as a percentage of available parallelism instead of a fixed worker count.
@@ -152,7 +155,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 
 ### Verification
 
-- **Automated checks:** `npm run quality:gate` and `npm run ci:local`
+- **Automated checks:** `npm run quality:gate`; add `npm run ci:local` for workflow-sensitive changes and explicit full PR or release readiness
 - **Local setup check:** `git config --get core.hooksPath` should resolve to `.githooks`
 - **Workflow shape:** `.github/workflows/ci.yml` should show separate fast and browser jobs, with repository-shape validation in the fast job
 
@@ -206,11 +209,17 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - When: the contributor runs `npm run lint`, the fast gate, or the applicable affected-file guardrail
 - Then: the command fails without replacing Prettier formatting or TypeScript project checking
 
-**Scenario: Full verification before landing code changes**
+**Scenario: Routine source change reaches readiness**
 
-- Given: a non-documentation change is ready for review or merge
+- Given: a source, test, or tooling change does not cross a workflow-sensitive boundary
+- When: the contributor runs `npm run quality:gate`
+- Then: the fast and browser verification paths pass locally without requiring a containerized replay of the workflow
+
+**Scenario: Workflow-sensitive change reaches readiness**
+
+- Given: a change affects GitHub Actions, dependency installation, build or container setup, browser CI setup, or an explicit full PR or release readiness check
 - When: the contributor runs `npm run quality:gate` and `npm run ci:local`
-- Then: the fast and browser verification paths pass locally, while GitHub supplies the clean full mutation signal for runtime-relevant changes
+- Then: the baseline gates pass and the split workflow is replayed in Agent CI, while GitHub supplies the clean full mutation signal for runtime-relevant changes
 
 **Scenario: Contributor monitors the full quality gate**
 

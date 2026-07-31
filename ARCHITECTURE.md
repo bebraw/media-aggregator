@@ -34,12 +34,13 @@ Use this file for global constraints. Use feature specs under `specs/` for domai
 - Keep Stryker at 50% concurrency for responsive local work, while the isolated GitHub mutation job may use 100% of its runner's available parallelism.
 - The fast quality gate should fail when Worker/view runtime files contain inline `<script>` tags, inline event-handler attributes, or `javascript:` URLs.
 - Unit coverage for `src/` code should stay high enough that the coverage gate remains green.
-- Local CI should validate the same baseline checks before non-documentation changes are proposed or merged.
+- Local CI should validate the same baseline checks when changes cross workflow-sensitive boundaries or when full PR or release readiness is requested.
 - The canonical local CI command should emit Agent CI's structured lifecycle event stream so agents can track run, job, step, pause, and completion state without relying on animated terminal output. Agent command wrappers must pass that stream through live instead of buffering it until process exit.
-- Targeted commands are useful while iterating, but `npm run quality:gate` and `npm run ci:local` remain the readiness baseline before proposing or landing non-documentation changes.
+- Targeted commands are useful while iterating, but `npm run quality:gate` remains the readiness baseline before proposing or landing non-documentation changes.
+- Require `npm run ci:local` when a change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when full PR or release readiness is requested. Ordinary source, test, and tooling changes do not require it when they stay outside those boundaries.
 - Use `npm run quality:gate:deep` when local assertion-strength feedback is worth the additional mutation-testing cost.
 - `npm run diagnostics:codebase` is useful during review and refactoring, but passing or failing it is not a readiness baseline by itself.
-- Documentation-only changes may skip `npm run ci:local` when they do not alter executable config, generated artifacts, package metadata, source code, or tests.
+- Documentation-only changes should use the smallest relevant checks unless they alter executable instructions or workflow contracts.
 
 ## Capability Kits
 

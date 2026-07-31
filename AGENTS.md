@@ -37,8 +37,8 @@
 - Add or update an ADR in `docs/adrs/` in the same change set whenever a decision introduces or changes a lasting architectural constraint, selects between credible alternatives, or supersedes an earlier architecture decision. Keep drafts in `docs/adrs/proposed/`, approved-but-not-yet-implemented decisions in `docs/adrs/accepted/`, and implemented decisions in `docs/adrs/implemented/`.
 - Record global architecture rules in `ARCHITECTURE.md` and feature-level contracts in `specs/{feature-domain}/spec.md`.
 - Treat completed feature work as spec work: create a new `specs/{feature-domain}/spec.md` or update the relevant existing spec in the same change set whenever feature behavior, contracts, workflows, or quality guardrails change.
-- Prefer the local Agent CI workflow before relying on remote CI.
-- Treat a non-documentation change as ready only after the quality gate and local CI both pass.
+- Prefer the local Agent CI workflow before relying on remote CI when workflow-sensitive validation is required.
+- Treat a non-documentation change as ready after the quality gate passes. Also require local CI when the change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when the user asks for full PR or release readiness.
 - Treat `package.json` as the source of truth for pinned Node and npm versions, with `.nvmrc` kept in sync as a convenience mirror for `nvm use`.
 - Read the relevant library or tool documentation carefully before applying, upgrading, or reconfiguring it in the project, especially when behavior is version-sensitive.
 - Use `npm run quality:gate:fast` for quick local iteration, `npm run quality:gate` for the full baseline gate, and `npm run ci:local` for the local workflow check.
@@ -47,8 +47,9 @@
 - Treat `npm run typecheck` as part of the baseline gate whenever TypeScript files or typed tooling config are involved.
 - Treat high automated test coverage as part of done work for `src/` code. The baseline gate should fail when `src/` code exists without matching unit coverage.
 - Keep new workflow write targets explicit and documented instead of adding ad hoc file writes.
-- Use targeted checks while iterating, then run `npm run quality:gate` and `npm run ci:local` before treating a non-documentation change as ready.
-- For documentation-only changes that do not alter executable config, generated artifacts, package metadata, source code, or tests, skip `npm run ci:local` and use the smallest relevant local checks such as `npm run format:check`.
+- Use targeted checks while iterating, then run `npm run quality:gate` before treating a non-documentation change as ready.
+- Run `npm run ci:local` for workflow-sensitive changes and explicit full PR or release readiness checks. Ordinary source, test, and tooling changes that do not cross those boundaries do not require local Agent CI.
+- For documentation-only changes that do not alter executable instructions or workflow contracts, use the smallest relevant local checks such as `npm run format:check`.
 
 ## TypeScript
 
@@ -60,8 +61,9 @@
 ## Agent CI
 
 - Use the project-local [`agent-ci`](./.codex/skills/agent-ci/SKILL.md) skill when testing, running checks, or validating code changes before pushing.
-- Treat the skill as the default local CI loop for this repo before relying on remote GitHub Actions.
-- Skip Agent CI for documentation-only changes that do not alter executable behavior or workflow configuration.
+- Use Agent CI to validate workflow-sensitive changes before relying on remote GitHub Actions.
+- Require Agent CI when a change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when the user asks for full PR or release readiness.
+- Skip Agent CI for ordinary source, test, tooling, and documentation changes that do not cross those workflow-sensitive boundaries.
 
 ## Frontend Design
 

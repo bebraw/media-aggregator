@@ -4,6 +4,8 @@
 
 **Date:** 2026-05-04
 
+**Amended by:** [ADR-046](./ADR-046-scope-local-agent-ci-to-workflow-sensitive-changes.md)
+
 ## Context
 
 `vibe-template` is meant to be cloned and adapted by agents across many small projects. The existing rules already require ADRs, specs, strict TypeScript, high coverage, and local Agent CI, but some operational expectations were still implicit.
