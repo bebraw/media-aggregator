@@ -20,7 +20,7 @@ copying unrelated starter structure.
 - **Agent sync entrypoint:** `.template/updates/AGENT_SYNC.md`
 - **Patch role:** focused first-attempt migration patch
 - **Guide role:** manual fallback for diverged target projects
-- **Applied update record:** target project docs or package metadata
+- **Applied update record:** target project docs or package metadata containing the template source, baseline Git revision, and applied update IDs when local pack history is pruned
 - **Current backfilled updates:**
   - `2026-06-09-node-24-npm-baseline`
   - `2026-06-10-capability-kits`
@@ -47,6 +47,7 @@ copying unrelated starter structure.
   - `2026-08-03-repository-local-spec-tdd`
   - `2026-08-03-readme-skill-catalog`
   - `2026-08-03-architecture-feedback`
+  - `2026-08-03-project-start-workflow`
 
 ### Anti-Patterns
 
@@ -60,6 +61,7 @@ copying unrelated starter structure.
   docs structure, workflow names, or source layout.
 - Do not require a custom CLI before update packs are useful.
 - Do not make agents infer the cross-repo sync workflow from scattered docs.
+- Do not prune local update-pack history before preserving a discoverable upstream source and baseline.
 
 ## Contract
 
@@ -72,6 +74,7 @@ copying unrelated starter structure.
 - [ ] Patch files are focused on reusable migration steps rather than whole
       template snapshots.
 - [ ] Durable docs mention update packs as the template-maintenance sync path.
+- [ ] Downstream projects can prune historical packs without losing their upstream source, starting revision, or applied-update record.
 - [ ] The spec is updated in the same change set.
 
 ### Regression Guardrails
@@ -84,6 +87,7 @@ copying unrelated starter structure.
 - The agent sync entrypoint must be explicit enough that a target-repo agent can
   act on "look at vibe-template for latest updates" without additional prompt
   engineering.
+- A pruned downstream project must be able to discover its template source and baseline from existing package metadata or durable docs.
 - Backfilled packs should cover reusable historical changes, not every commit.
 - New reusable template maintenance changes should add or update an update pack
   in the same change set.

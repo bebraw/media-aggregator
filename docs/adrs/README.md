@@ -83,6 +83,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-048](./implemented/ADR-048-adopt-repository-local-wayfinding.md)                  | Implemented | Adapt Wayfinder to repository-local maps and the template's durable documentation model.          |
 | [ADR-049](./implemented/ADR-049-adopt-local-spec-and-tdd-skills.md)                    | Implemented | Add repository-local spec synthesis and focused red-green implementation skills.                  |
 | [ADR-050](./implemented/ADR-050-add-early-architecture-feedback.md)                    | Implemented | Add ownership contracts, structural smoke alarms, and capability architecture review.             |
+| [ADR-051](./implemented/ADR-051-add-approval-gated-project-start.md)                   | Implemented | Add a read-only project-start plan before approved pruning of a fresh clone.                      |
 
 ## Creating A New ADR
 

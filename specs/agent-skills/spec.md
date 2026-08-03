@@ -25,6 +25,8 @@ Users also need a concise README catalog that makes the available skills discove
 - **Baseline Cloudflare CLI skill:** `wrangler`
 - **Specialized Cloudflare skills:** added on demand when their product is adopted
 - **Repository-local wayfinding skill:** `.codex/skills/wayfinder/`
+- **Explicit project-start skill:** `.codex/skills/start-project/`
+- **Project-start behavior owner:** `specs/project-start/spec.md`
 - **Wayfinding map:** `docs/wayfinding/<effort>.md`
 - **Wayfinding authority:** working context only; lasting decisions graduate into architecture docs, ADRs, and specs
 - **Repository-local specification skill:** `.codex/skills/to-spec/`
@@ -48,6 +50,7 @@ Users also need a concise README catalog that makes the available skills discove
 - Do not force TDD onto changes without meaningful observable behavior or a stable test seam.
 - Do not write tautological or implementation-coupled tests merely to satisfy a test-first sequence.
 - Do not make users inspect the skill directory to discover names, purposes, or invocation behavior.
+- Do not let project initialization edit or prune a clone before the user approves an exact plan.
 - Do not duplicate complete skill workflows in the README; link to each `SKILL.md` as the source of truth.
 - Do not treat structural metrics as a substitute for reviewing capability ownership and dependency direction.
 
@@ -68,6 +71,7 @@ Users also need a concise README catalog that makes the available skills discove
 - [ ] The README groups every project-local skill by job and gives each a concise, user-facing purpose.
 - [ ] The README explains natural matching, named `$skill` invocation, and which workflows require explicit invocation.
 - [ ] The template includes a model-invoked `architecture-review` skill that combines durable capability contracts, deterministic source-shape checks, and advisory Fallow evidence.
+- [ ] The template includes an explicitly invoked `start-project` skill whose behavior is owned by `specs/project-start/spec.md`.
 
 ### Regression Guardrails
 
@@ -89,6 +93,7 @@ Users also need a concise README catalog that makes the available skills discove
 - **Wayfinder structure:** confirm the skill has valid `name` and `description` frontmatter plus valid `agents/openai.yaml`; use the skill-creator validator when its Python dependencies are available
 - **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
 - **Architecture review structure:** validate `.codex/skills/architecture-review/` metadata and confirm its workflow routes lasting outcomes into architecture docs, ADRs, or specs
+- **Project start structure:** validate `.codex/skills/start-project/` metadata and confirm its workflow is read-only until the exact pruning plan is approved
 - **README catalog:** confirm every `.codex/skills/*/SKILL.md` has a corresponding README link and that explicit-only workflows are identified
 
 ### Scenarios
@@ -158,6 +163,12 @@ Users also need a concise README catalog that makes the available skills discove
 - Given: the user knows the job they need done but not the available skill names
 - When: they read the README skill catalog
 - Then: they can find the matching skill, understand its purpose, and either describe the job naturally or invoke it by `$skill-name`
+
+**Scenario: User starts from a fresh clone**
+
+- Given: the repository still contains inherited starter and distribution material
+- When: the user explicitly invokes Start Project
+- Then: the agent defines the first closed product loop and presents an exact, read-only pruning plan before editing or deleting files
 
 **Scenario: Capability expansion meets structural pressure**
 

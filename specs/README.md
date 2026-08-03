@@ -23,6 +23,7 @@ Skip a spec for small fixes, trivial copy changes, or narrow tactical edits.
 - Feature specs belong in `specs/{feature-domain}/spec.md`.
 - Capability-kit contracts belong in `specs/capability-kits/spec.md`.
 - Agent-skill baseline contracts belong in `specs/agent-skills/spec.md`.
+- Project initialization and pruning contracts belong in `specs/project-start/spec.md`.
 - Template update-pack contracts belong in `specs/template-updates/spec.md`.
 
 ## Starting Point

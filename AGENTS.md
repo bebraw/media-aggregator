@@ -82,6 +82,12 @@
 - Use the project-local [`brainstorming`](./.codex/skills/brainstorming/SKILL.md) skill when the user is exploring options, shaping a feature, or comparing approaches before implementation.
 - Treat the skill as guidance for producing concrete, lightweight options that can turn cleanly into specs, ADRs, or code.
 
+## Project Start
+
+- Use the project-local [`start-project`](./.codex/skills/start-project/SKILL.md) skill only when the user explicitly asks to initialize, personalize, or prune a project cloned from this template.
+- Require a read-only Project Start Plan that defines the current closed product loop and lists exact keep, replace-later, removal, decision, documentation, update-path, and verification items.
+- Do not edit or delete files until the user approves that plan; preserve the template source and baseline before pruning local update history.
+
 ## Wayfinding
 
 - Use the project-local [`wayfinder`](./.codex/skills/wayfinder/SKILL.md) skill only when the user explicitly asks to map a large, uncertain initiative that is not yet clear enough to specify or plan responsibly.

@@ -7,6 +7,7 @@ Use this file for global constraints. Use feature specs under `specs/` for domai
 ## Global Rules
 
 - Keep the template lightweight, reusable, easy to clone, and easy to prune.
+- Initialize a downstream clone through an approval-gated project-start pass: define one current closed product loop, classify inherited surfaces, preserve working seams, and record update provenance before pruning.
 - Treat repo documentation as living context that should evolve with the code.
 - Treat architectural decisions as explicit records, not implicit tribal knowledge.
 - Treat specs and ADRs as the durable source of truth for expected behavior and architectural intent. Code, including AI-generated code, is only acceptable when it matches those documents or updates them intentionally in the same change set.
@@ -62,6 +63,7 @@ Use this file for global constraints. Use feature specs under `specs/` for domai
 - Keep update packs as reviewable plain files with metadata, a migration guide, and a focused patch.
 - Use update packs for later changes to projects that already use this template or one of its capability kits.
 - Do not treat update packs as source snapshots; preserve downstream project conventions and use the migration guide when the patch does not apply cleanly.
+- When a downstream project prunes local update-pack history, record the template source, baseline Git revision, and applied update IDs in existing package metadata or durable documentation, and retain a discoverable sync entrypoint.
 
 ## Spec Conventions
 
