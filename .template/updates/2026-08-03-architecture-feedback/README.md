@@ -21,6 +21,8 @@ If the target has legitimate large generated or declarative source, exclude gene
 
 If the target does not use Fallow, replace the skill's advisory commands with its existing coupling, churn, and topology tools. The deterministic source-shape checker has no package dependency.
 
+The template defaults of 1,000 lines per production file and 40 direct production files per directory were calibrated against Kirjolab's 1,461-commit development history. Lower limits interrupted the initial discovery slice; higher limits delayed feedback until mixed ownership or refactoring pressure was already pronounced. Treat these values as evidence-based starting points, then adapt them to the target's language and source conventions.
+
 ## Verify
 
 - Run `node --test scripts/check-source-shape.test.mjs`.

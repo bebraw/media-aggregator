@@ -24,6 +24,18 @@ Quality Gate owns the deterministic checker, configuration, and gate integration
 
 Thresholds are review checkpoints, not decomposition rules. A passing check does not prove good architecture, and a failing check must not trigger mechanical file splitting.
 
+## Calibration
+
+The default limits were replayed against all 1,461 commits in Kirjolab's history using the same production-source extensions and test exclusions as the checker.
+
+- A 500-line limit would have fired about one hour into the initial vertical slice, and 750 lines about two hours in. Those thresholds risk interrupting useful early discovery.
+- The selected 1,000-line limit first fired at commit `f4597dcbf4acbcfe3f1fcac1f54736511f9380a5`, the twelfth commit and about three hours after initialization. At 1,088 lines, `src/client/app.ts` already combined element collection, event binding, collaboration state, API access, rendering, PDF workflows, claims, and model suggestions. The signal therefore corresponded to mixed authority rather than size alone.
+- A 1,500-line limit would not have fired until the next morning. It remained early, but allowed the same coordinator to reach 1,849 lines before review.
+- Direct-directory limits of 20 and 30 files fired on 15 July while capability extraction was still emerging. The selected 40-file limit first fired at commit `8abd277747e9e77dce1370e5b845fd44d10a1bae` on 17 July, when `src/domain` reached 41 direct production files spanning bibliography, collaboration, export, GitHub sync, LaTeX, references, reviews, workspace state, and writing workflows.
+- A 50-file limit did not fire until 22 July, after refactoring already represented a substantial part of the work.
+
+The calibration retains 1,000 lines and 40 direct production files as the defaults. Existing mature projects may cross them immediately; those projects should use Architecture Review and exact rationale-bearing exceptions or staged consolidation instead of weakening the shared defaults silently.
+
 ## Trigger
 
 A real downstream project preserved functional correctness while its implementation structure grew faster than its capability ownership model. The user asked to improve the template so structural feedback arrives before similar growth becomes expensive to reverse.
