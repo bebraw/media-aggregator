@@ -10,6 +10,8 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 
 Once decisions settle, the template should provide a direct repository-local path from discussion to its living feature spec and from that contract to behavior-first implementation.
 
+Users also need a concise README catalog that makes the available skills discoverable, explains the job each one performs, and shows how to request one without reading every skill file first.
+
 ### Architecture
 
 - **Codex skill root:** `.codex/skills/`
@@ -24,6 +26,7 @@ Once decisions settle, the template should provide a direct repository-local pat
 - **Repository-local specification skill:** `.codex/skills/to-spec/`
 - **Specification target:** `specs/<feature-domain>/spec.md`
 - **Behavior-first implementation skill:** `.codex/skills/tdd/`
+- **User-facing skill catalog:** `README.md`
 
 ### Anti-Patterns
 
@@ -38,6 +41,8 @@ Once decisions settle, the template should provide a direct repository-local pat
 - Do not synthesize unresolved decisions into a spec as if they were settled.
 - Do not force TDD onto changes without meaningful observable behavior or a stable test seam.
 - Do not write tautological or implementation-coupled tests merely to satisfy a test-first sequence.
+- Do not make users inspect the skill directory to discover names, purposes, or invocation behavior.
+- Do not duplicate complete skill workflows in the README; link to each `SKILL.md` as the source of truth.
 
 ## Contract
 
@@ -53,6 +58,8 @@ Once decisions settle, the template should provide a direct repository-local pat
 - [ ] The template includes an explicitly invoked `to-spec` skill that writes the existing Blueprint/Contract format.
 - [ ] The template includes a model-invoked `tdd` skill for observable source behavior and regression fixes.
 - [ ] Both skills reuse the existing spec, ADR, test, and quality-gate conventions without companion setup.
+- [ ] The README groups every project-local skill by job and gives each a concise, user-facing purpose.
+- [ ] The README explains natural matching, named `$skill` invocation, and which workflows require explicit invocation.
 
 ### Regression Guardrails
 
@@ -73,6 +80,7 @@ Once decisions settle, the template should provide a direct repository-local pat
 - **Documentation check:** `npm run format:check`
 - **Wayfinder structure:** confirm the skill has valid `name` and `description` frontmatter plus valid `agents/openai.yaml`; use the skill-creator validator when its Python dependencies are available
 - **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
+- **README catalog:** confirm every `.codex/skills/*/SKILL.md` has a corresponding README link and that explicit-only workflows are identified
 
 ### Scenarios
 
@@ -135,3 +143,9 @@ Once decisions settle, the template should provide a direct repository-local pat
 - Given: the change is documentation-only, generated, a prototype, or purely mechanical
 - When: the agent considers TDD
 - Then: the agent skips it and states the deterministic verification used instead
+
+**Scenario: User looks for an available workflow**
+
+- Given: the user knows the job they need done but not the available skill names
+- When: they read the README skill catalog
+- Then: they can find the matching skill, understand its purpose, and either describe the job naturally or invoke it by `$skill-name`

@@ -45,6 +45,7 @@ copying unrelated starter structure.
   - `2026-07-31-cloudflare-mcp-skill-baseline`
   - `2026-08-03-repository-local-wayfinder`
   - `2026-08-03-repository-local-spec-tdd`
+  - `2026-08-03-readme-skill-catalog`
 
 ### Anti-Patterns
 
