@@ -8,6 +8,8 @@ The template should include agent workflows that are broadly useful to its basel
 
 Large, uncertain initiatives also need a lightweight way to preserve discovery across sessions without requiring an external issue tracker or turning transient planning notes into architectural authority.
 
+Once decisions settle, the template should provide a direct repository-local path from discussion to its living feature spec and from that contract to behavior-first implementation.
+
 ### Architecture
 
 - **Codex skill root:** `.codex/skills/`
@@ -19,6 +21,9 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 - **Repository-local wayfinding skill:** `.codex/skills/wayfinder/`
 - **Wayfinding map:** `docs/wayfinding/<effort>.md`
 - **Wayfinding authority:** working context only; lasting decisions graduate into architecture docs, ADRs, and specs
+- **Repository-local specification skill:** `.codex/skills/to-spec/`
+- **Specification target:** `specs/<feature-domain>/spec.md`
+- **Behavior-first implementation skill:** `.codex/skills/tdd/`
 
 ### Anti-Patterns
 
@@ -29,6 +34,10 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 - Do not require GitHub Issues, labels, assignments, tracker setup, or a companion skill suite for wayfinding.
 - Do not treat a wayfinding map as the durable source of truth for architecture or feature behavior.
 - Do not invoke wayfinding for work that is already clear enough to specify or implement in one session.
+- Do not publish feature specs to issue trackers or create parallel PRD formats.
+- Do not synthesize unresolved decisions into a spec as if they were settled.
+- Do not force TDD onto changes without meaningful observable behavior or a stable test seam.
+- Do not write tautological or implementation-coupled tests merely to satisfy a test-first sequence.
 
 ## Contract
 
@@ -41,6 +50,9 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 - [ ] The template includes an explicitly invoked `wayfinder` skill for large, uncertain, multi-session efforts.
 - [ ] Wayfinder stores one map per effort in `docs/wayfinding/` and creates no external tracker state.
 - [ ] Wayfinder promotes lasting decisions into the repository's existing architecture, ADR, and spec structure.
+- [ ] The template includes an explicitly invoked `to-spec` skill that writes the existing Blueprint/Contract format.
+- [ ] The template includes a model-invoked `tdd` skill for observable source behavior and regression fixes.
+- [ ] Both skills reuse the existing spec, ADR, test, and quality-gate conventions without companion setup.
 
 ### Regression Guardrails
 
@@ -49,6 +61,9 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 - Removing a baseline skill must not remove its runtime dependency or product implementation implicitly.
 - Wayfinding must remain optional, repository-local, and independent of issue-tracker infrastructure.
 - A map must not become ready for specification while lasting decisions exist only in transient planning text.
+- To Spec must stop rather than invent an answer when a material contract or architecture decision remains unresolved.
+- TDD must prove the intended missing behavior with a failing test before changing production code.
+- TDD must allow explicit alternative verification for documentation, prototypes, generated output, and mechanical changes.
 
 ### Verification
 
@@ -57,6 +72,7 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 - **Pruned bundles:** confirm the four removed skill directories are absent from both roots
 - **Documentation check:** `npm run format:check`
 - **Wayfinder structure:** confirm the skill has valid `name` and `description` frontmatter plus valid `agents/openai.yaml`; use the skill-creator validator when its Python dependencies are available
+- **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
 
 ### Scenarios
 
@@ -95,3 +111,27 @@ Large, uncertain initiatives also need a lightweight way to preserve discovery a
 - Given: the requested outcome can already be specified or planned responsibly
 - When: the user invokes Wayfinder
 - Then: the agent recommends the direct workflow instead of creating a map
+
+**Scenario: Settled discussion becomes a feature spec**
+
+- Given: the user has settled the feature behavior and important constraints
+- When: the user explicitly invokes To Spec
+- Then: the agent confirms one `specs/<feature-domain>/spec.md` target and synthesizes the agreed Blueprint and Contract without creating tracker state
+
+**Scenario: Specification still contains a material decision**
+
+- Given: an unresolved choice would change the feature contract or architecture
+- When: To Spec evaluates readiness
+- Then: the agent names the unresolved decision and returns to brainstorming or wayfinding instead of guessing
+
+**Scenario: Observable runtime behavior changes**
+
+- Given: a stable public test seam exposes the requested behavior
+- When: the agent implements the change
+- Then: TDD proves the missing behavior red, makes the smallest production change green, and repeats by vertical slice
+
+**Scenario: No meaningful red test exists**
+
+- Given: the change is documentation-only, generated, a prototype, or purely mechanical
+- When: the agent considers TDD
+- Then: the agent skips it and states the deterministic verification used instead

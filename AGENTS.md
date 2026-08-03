@@ -88,6 +88,18 @@
 - Keep each effort in one repository-local `docs/wayfinding/<effort>.md` map by default; do not introduce an issue tracker or companion workflow suite.
 - Treat wayfinding maps as temporary planning context. Promote lasting architecture and behavior into `ARCHITECTURE.md`, ADRs, and feature specs before declaring a map ready for specification.
 
+## Specification
+
+- Use the project-local [`to-spec`](./.codex/skills/to-spec/SKILL.md) skill when the user explicitly asks to turn settled discussion, wayfinding results, or an approved design into a feature spec.
+- Write or update `specs/{feature-domain}/spec.md`; do not publish specs to an issue tracker or invent decisions that remain unresolved.
+- Keep architectural rationale in ADRs and global constraints in `ARCHITECTURE.md`, linked from the feature spec instead of duplicated.
+
+## Test-Driven Development
+
+- Use the project-local [`tdd`](./.codex/skills/tdd/SKILL.md) skill for observable runtime behavior and regression fixes when a stable test seam exists.
+- Work in focused red-green slices with independent expected values and tests through public interfaces.
+- Skip TDD for documentation-only, prototype, generated, and purely mechanical changes; state the alternative verification instead.
+
 ## Review
 
 - Use the project-local [`review`](./.codex/skills/review/SKILL.md) skill when the user asks for review, risk analysis, or a merge-readiness pass.

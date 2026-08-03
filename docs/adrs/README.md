@@ -79,6 +79,9 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-044](./implemented/ADR-044-vendor-engineering-quality-skills.md)                  | Implemented | Vendor focused correctness, test, and debug skills as a reusable capability kit.                  |
 | [ADR-045](./implemented/ADR-045-adopt-type-aware-fallow-diagnostics.md)                | Implemented | Use Fallow's stable type-aware evidence and expose its interactive codebase map.                  |
 | [ADR-046](./implemented/ADR-046-scope-local-agent-ci-to-workflow-sensitive-changes.md) | Implemented | Require local Agent CI for workflow-sensitive changes and explicit full readiness checks.         |
+| [ADR-047](./implemented/ADR-047-use-cloudflare-mcp-as-the-platform-knowledge-layer.md) | Implemented | Use Cloudflare MCP for current platform knowledge while keeping focused local skills.             |
+| [ADR-048](./implemented/ADR-048-adopt-repository-local-wayfinding.md)                  | Implemented | Adapt Wayfinder to repository-local maps and the template's durable documentation model.          |
+| [ADR-049](./implemented/ADR-049-adopt-local-spec-and-tdd-skills.md)                    | Implemented | Add repository-local spec synthesis and focused red-green implementation skills.                  |
 
 ## Creating A New ADR
 
