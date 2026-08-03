@@ -15,6 +15,7 @@ runPrettier(affectedFiles);
 runOxlint(affectedFiles);
 runJavaScriptSyntaxCheckWhenNeeded(affectedFiles);
 runTypecheckWhenNeeded(affectedFiles);
+runSourceShapeCheckWhenNeeded(affectedFiles);
 runWorkerClientGuard(affectedFiles);
 runAuditWhenNeeded(affectedFiles);
 runTestsWhenNeeded(affectedFiles);
@@ -59,6 +60,16 @@ function runJavaScriptSyntaxCheckWhenNeeded(files) {
   for (const file of syntaxCheckFiles) {
     run(repoRoot, "node", ["--check", file]);
   }
+}
+
+function runSourceShapeCheckWhenNeeded(files) {
+  if (!files.some(isSourceShapeFile)) {
+    console.log("Source shape check skipped: no production source files changed.");
+    return;
+  }
+
+  console.log("Checking source shape after production source changes...");
+  run(repoRoot, "npm", ["run", "quality:structure"]);
 }
 
 function runWorkerClientGuard(files) {
@@ -114,6 +125,17 @@ function isWorkerClientGuardFile(file) {
     !file.endsWith(".test.ts") &&
     !file.endsWith(".e2e.ts") &&
     !file.endsWith(".d.ts")
+  );
+}
+
+function isSourceShapeFile(file) {
+  return (
+    file === ".architecture-check.json" ||
+    file === "scripts/check-source-shape.mjs" ||
+    (file.startsWith("src/") &&
+      /\.(?:js|jsx|mjs|cjs|ts|tsx|mts|cts)$/.test(file) &&
+      !/\.(?:test|e2e)\.(?:js|jsx|mjs|cjs|ts|tsx|mts|cts)$/.test(file) &&
+      !file.endsWith(".d.ts"))
   );
 }
 

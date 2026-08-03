@@ -8,9 +8,16 @@
 
 ### Architecture
 
+- **Capability source root:** {Directory that owns this independently evolvable behavior}
+- **Composition root:** {File or module that wires the capability into the application}
 - **Entry points:** {Routes, commands, jobs, or other entry surfaces}
-- **Data models:** {Relevant schemas, file paths, or persistent state}
-- **Dependencies:** {What this feature depends on and what depends on it}
+- **State authority:** {Canonical state, persistence owner, and derived/rebuildable state}
+- **Public contracts:** {APIs, schemas, events, or module seams used by dependents}
+- **Dependency direction:** {What this capability may depend on and what may depend on it}
+
+### Out of Scope
+
+- {Adjacent capability intentionally deferred from this contract}
 
 ### Anti-Patterns
 

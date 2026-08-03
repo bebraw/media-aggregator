@@ -39,6 +39,7 @@ The repository includes focused instructions under `.codex/skills/` that help co
 - [`$correctness-review`](.codex/skills/correctness-review/SKILL.md) — inspect changed logic specifically for behavioral errors, edge cases, and broken contracts.
 - [`$test-review`](.codex/skills/test-review/SKILL.md) — evaluate whether tests cover meaningful behavior without becoming brittle or redundant.
 - [`$security`](.codex/skills/security/SKILL.md) — review authentication, secrets, access control, data exposure, and input-handling risks proportionately.
+- [`$architecture-review`](.codex/skills/architecture-review/SKILL.md) — decide whether a growing capability can expand safely or should consolidate its ownership and dependency boundaries first.
 
 ### Frontend and Performance
 
@@ -71,6 +72,7 @@ Each linked `SKILL.md` is the source of truth for boundaries and workflow detail
 
 - Run the fast local gate with `npm run quality:gate:fast` during normal iteration.
 - Run the baseline repo gate with `npm run quality:gate`.
+- Run the deterministic source-shape smoke alarms directly with `npm run quality:structure`; threshold failures call for architecture review or an exact rationale-bearing exception, not mechanical file splitting.
 - Run the containerized local workflow with `npm run ci:local` when changing GitHub Actions, dependencies or installation behavior, build or container setup, browser CI setup, or when performing a full PR or release readiness check. It emits structured run, job, and step progress for agents, uses Agent CI parallelism with warm-cache serialization, and pauses failed runners for retry.
 - Run advisory codebase readability diagnostics with `npm run diagnostics:codebase`.
 - The repo-managed `pre-push` hook runs `npm run quality:affected` automatically after `npm install`.

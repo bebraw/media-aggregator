@@ -82,6 +82,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-047](./implemented/ADR-047-use-cloudflare-mcp-as-the-platform-knowledge-layer.md) | Implemented | Use Cloudflare MCP for current platform knowledge while keeping focused local skills.             |
 | [ADR-048](./implemented/ADR-048-adopt-repository-local-wayfinding.md)                  | Implemented | Adapt Wayfinder to repository-local maps and the template's durable documentation model.          |
 | [ADR-049](./implemented/ADR-049-adopt-local-spec-and-tdd-skills.md)                    | Implemented | Add repository-local spec synthesis and focused red-green implementation skills.                  |
+| [ADR-050](./implemented/ADR-050-add-early-architecture-feedback.md)                    | Implemented | Add ownership contracts, structural smoke alarms, and capability architecture review.             |
 
 ## Creating A New ADR
 

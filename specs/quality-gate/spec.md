@@ -8,6 +8,11 @@ The template needs a verification baseline that stays strict enough for end-to-e
 
 ### Architecture
 
+- **Capability source root:** `scripts/` with command and policy configuration at the repository root
+- **Composition root:** `package.json` scripts and `scripts/run-quality-gate.mjs`
+- **State authority:** committed tool configuration such as `.architecture-check.json`, `.fallowrc.json`, and test-runner configs; ignored reports and caches are disposable
+- **Public contracts:** the documented `npm run quality:*`, `npm run diagnostics:*`, test, and local-CI commands
+- **Dependency direction:** orchestration scripts may invoke pinned development tools; runtime `src/` code must not depend on quality tooling
 - **Fast gate:** `npm run quality:gate:fast`
 - **Formatting scope:** project-owned code and documentation, excluding duplicated or vendored skill material listed in `.prettierignore`
 - **Formatting cache:** content-based Prettier cache at ignored `.cache/prettier`
@@ -15,6 +20,10 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - **Affected guardrails:** `npm run quality:affected`
 - **Browser gate:** `npm run e2e`
 - **Affected test gate:** `npm run test:affected`
+- **Source-shape gate:** `npm run quality:structure`
+- **Source-shape config:** `.architecture-check.json`
+- **Source-shape logic:** `scripts/check-source-shape.mjs`
+- **Architecture-feedback integration:** deterministic source-shape behavior is owned here; `specs/architecture-feedback/spec.md` owns its composition with the interpretive review skill
 - **Advisory codebase diagnostics:** `npm run diagnostics:codebase`
 - **Changed-code readability diagnostics:** `npm run diagnostics:readability`
 - **Whole-repo health diagnostics:** `npm run diagnostics:health`
@@ -61,6 +70,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - Do not replace Prettier formatting or TypeScript project checking with Oxlint.
 - Do not enable broad Oxlint style, restriction, pedantic, or type-aware rule sets without an explicit decision and compatibility review.
 - Do not treat advisory Fallow diagnostics as a replacement for formatting, type checking, runtime audit, unit coverage, browser tests, mutation testing, or Worker-specific guardrails.
+- Do not treat source-shape limits as decomposition targets or proof of architectural quality.
 - Do not treat targeted iteration checks as a replacement for `npm run quality:gate` on non-documentation changes.
 - Do not require Agent CI for changes that do not cross a documented workflow-sensitive boundary unless full PR or release readiness is explicitly requested.
 - Do not add undocumented workflow write targets for generated output, local state, caches, archives, or tool artifacts.
@@ -69,12 +79,13 @@ The template needs a verification baseline that stays strict enough for end-to-e
 
 ### Definition of Done
 
-- [ ] The fast gate covers formatting, Oxlint correctness checks, type checking, Worker client-code guardrails, runtime audit, and unit coverage.
+- [ ] The fast gate covers formatting, Oxlint correctness checks, type checking, source-shape smoke alarms, Worker client-code guardrails, runtime audit, and unit coverage.
 - [ ] Repeated formatting checks reuse content-based results for unchanged files without weakening cold-run coverage.
 - [ ] The affected guardrail path scopes formatting, Oxlint, JavaScript syntax checks, Worker client-code checks, package audit, and unit tests to affected files when possible.
 - [ ] The affected test gate runs tests related to affected runtime files, runs affected unit test files directly, and falls back to full coverage for broad test environment changes or affected runtime files with no related tests.
 - [ ] The advisory codebase diagnostics report changed-code readability risk, whole-repo health, hotspots, duplication, exact-symbol evidence, public-signature type coupling, and cleanup evidence without becoming part of the hard quality gate.
 - [ ] The interactive codebase map writes a self-contained HTML report under ignored `.fallow/` state without opening a browser automatically.
+- [ ] The source-shape gate rejects extreme production file and flat-directory growth while allowing exact rationale-bearing exceptions.
 - [ ] The browser gate covers the Playwright baseline.
 - [ ] The full mutation gate covers runtime `src/**/*.ts` files with Stryker, Vitest, and TypeScript checking.
 - [ ] The incremental mutation gate reuses prior Stryker results for explicit deep local runs while preserving a complete mutation report.
@@ -90,6 +101,8 @@ The template needs a verification baseline that stays strict enough for end-to-e
 ### Regression Guardrails
 
 - `npm run quality:gate:fast` must remain a useful faster signal than the full gate.
+- `npm run quality:structure` must scan configured production roots without adding a runtime dependency or counting tests, end-to-end tests, and declarations.
+- Source-shape limits must stay configurable in `.architecture-check.json`, and exact exceptions must include rationales.
 - Prettier must ignore `.github/skills/` and `.codex/skills/**/references/` while continuing to check project-owned skill entry points, specs, ADRs, and documentation.
 - `npm run format:check` must use Prettier's content cache under ignored `.cache/prettier`; CI must remain correct when that cache is absent.
 - `npm run lint` must use the pinned Oxlint dependency, enable only its default rules, and fail when warnings are reported.
@@ -122,6 +135,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - The affected guardrail path must pass only affected JavaScript and TypeScript files to Oxlint.
 - The affected guardrail path must run JavaScript syntax checks only for affected JavaScript files.
 - The affected guardrail path must run package audit only when package metadata or lockfiles change.
+- The affected guardrail path must run the source-shape check when production source, the checker, or its configuration changes.
 - The affected guardrail path must skip unit tests when no runtime or unit test files are affected.
 - The affected test path must run full unit coverage when package metadata, TypeScript config, Vitest config, coverage-gate logic, or affected-test logic changes.
 - The affected test path must run full unit coverage when affected-file helper logic changes.
@@ -156,6 +170,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 ### Verification
 
 - **Automated checks:** `npm run quality:gate`; add `npm run ci:local` for workflow-sensitive changes and explicit full PR or release readiness
+- **Source-shape tests:** `node --test scripts/check-source-shape.test.mjs`
 - **Local setup check:** `git config --get core.hooksPath` should resolve to `.githooks`
 - **Workflow shape:** `.github/workflows/ci.yml` should show separate fast and browser jobs, with repository-shape validation in the fast job
 
@@ -178,6 +193,12 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - Given: a change is ready for review or a refactor target is unclear
 - When: the contributor runs `npm run diagnostics:codebase`
 - Then: Fallow reports changed-code readability risk, health scoring, hotspots, duplication, and cleanup evidence without replacing the baseline gate
+
+**Scenario: Production source crosses a structural smoke alarm**
+
+- Given: a production source file or direct source directory exceeds its configured limit without an exception
+- When: the fast or affected guardrail path runs
+- Then: `quality:structure` fails with the measured path and directs the contributor to Architecture Review
 
 **Scenario: Contributor wants a codebase map**
 

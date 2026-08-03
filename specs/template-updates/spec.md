@@ -46,6 +46,7 @@ copying unrelated starter structure.
   - `2026-08-03-repository-local-wayfinder`
   - `2026-08-03-repository-local-spec-tdd`
   - `2026-08-03-readme-skill-catalog`
+  - `2026-08-03-architecture-feedback`
 
 ### Anti-Patterns
 

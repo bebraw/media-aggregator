@@ -69,6 +69,7 @@ Use targeted checks while iterating, then run the checks that match the change b
 - TypeScript or typed tooling changes: `npm run typecheck`
 - Runtime `src/` changes while iterating: `npm run typecheck` and `npm run test:affected`
 - Browser behavior or UI changes: `npm run quality:gate`
+- Extreme source-file or flat-directory growth: `npm run quality:structure`
 - Readability, complexity, duplication, or cleanup review: `npm run diagnostics:codebase`
 - Baseline readiness for non-documentation changes: `npm run quality:gate`
 - Workflow-sensitive changes or explicit full PR/release readiness: `npm run quality:gate` and `npm run ci:local`
@@ -98,6 +99,8 @@ Oxlint provides the baseline JavaScript and TypeScript correctness lint. `npm ru
 Prettier formats project-owned code and documentation. The committed `.prettierignore` excludes duplicated `.github/skills/` content and vendored `.codex/skills/**/references/` material so the fast gate does not repeatedly format externally maintained skill documentation. Project-owned skill entry points remain in the formatting baseline.
 
 Fallow provides advisory codebase readability diagnostics. `npm run diagnostics:readability` runs a changed-code audit for complexity, duplication, dependency hygiene, and cleanup findings while relaxing CRAP-score noise from untested tooling scripts. `npm run diagnostics:health` reports whole-repo health scoring, hotspots, refactoring targets, and advisory public-signature type coupling. `npm run diagnostics:codebase` runs both. These commands use Fallow's best-effort type-aware mode for exact-symbol evidence while leaving compiler diagnostics to `npm run typecheck` and local lint rules to Oxlint.
+
+`npm run quality:structure` scans production JavaScript and TypeScript under the roots configured in `.architecture-check.json`. It fails when a non-exempt source file exceeds 1,000 lines or one directory contains more than 40 direct source files. These intentionally generous limits are smoke alarms: use `$architecture-review` and the Fallow diagnostics to evaluate ownership before expanding the capability. Intentional exceptions must name the exact file or directory and include a rationale in the config.
 
 `npm run diagnostics:map` generates a read-only interactive treemap and import graph at `.fallow/codebase-map.html`; open that file in a browser after generation. All diagnostic commands use `--no-cache`. The map is the only normal diagnostic artifact, and its ignored `.fallow/` location also contains any caches contributors create with manual Fallow commands.
 

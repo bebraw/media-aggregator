@@ -14,8 +14,12 @@ Users also need a concise README catalog that makes the available skills discove
 
 ### Architecture
 
-- **Codex skill root:** `.codex/skills/`
-- **Mirrored skill root:** `.github/skills/`
+- **Canonical project-local skill root:** `.codex/skills/`
+- **Selective compatibility copies:** `.github/skills/` and capability-kit `files/` only for skills intentionally distributed through those surfaces
+- **Copy policy:** keep an intentional distribution copy byte-equivalent to its canonical `.codex/skills/` source unless the target surface requires a documented compatibility adaptation
+- **Composition roots:** `AGENTS.md` for model routing and `README.md` for user discovery
+- **Skill contracts:** each canonical `SKILL.md` plus optional `agents/openai.yaml`
+- **Dependency direction:** routing and distribution surfaces point to canonical skills; canonical skills do not depend on their copies
 - **Cloudflare knowledge and account layer:** connected Cloudflare MCP
 - **Baseline Cloudflare implementation skill:** `workers-best-practices`
 - **Baseline Cloudflare CLI skill:** `wrangler`
@@ -26,6 +30,8 @@ Users also need a concise README catalog that makes the available skills discove
 - **Repository-local specification skill:** `.codex/skills/to-spec/`
 - **Specification target:** `specs/<feature-domain>/spec.md`
 - **Behavior-first implementation skill:** `.codex/skills/tdd/`
+- **Capability architecture review skill:** `.codex/skills/architecture-review/`
+- **Architecture-feedback integration:** review-skill behavior is owned here; `specs/architecture-feedback/spec.md` owns its composition with deterministic source-shape evidence
 - **User-facing skill catalog:** `README.md`
 
 ### Anti-Patterns
@@ -33,7 +39,7 @@ Users also need a concise README catalog that makes the available skills discove
 - Do not vendor broad Cloudflare documentation snapshots when the connected MCP supplies current retrieval.
 - Do not treat the MCP as a replacement for local Wrangler development, configuration, type generation, or testing workflows.
 - Do not retain product-specific skills for capabilities the template does not use.
-- Do not let skills intentionally supported in both `.codex/skills/` and `.github/skills/` diverge.
+- Do not let intentional compatibility or capability-kit copies diverge from their canonical `.codex/skills/` source without a documented adaptation.
 - Do not require GitHub Issues, labels, assignments, tracker setup, or a companion skill suite for wayfinding.
 - Do not treat a wayfinding map as the durable source of truth for architecture or feature behavior.
 - Do not invoke wayfinding for work that is already clear enough to specify or implement in one session.
@@ -43,6 +49,7 @@ Users also need a concise README catalog that makes the available skills discove
 - Do not write tautological or implementation-coupled tests merely to satisfy a test-first sequence.
 - Do not make users inspect the skill directory to discover names, purposes, or invocation behavior.
 - Do not duplicate complete skill workflows in the README; link to each `SKILL.md` as the source of truth.
+- Do not treat structural metrics as a substitute for reviewing capability ownership and dependency direction.
 
 ## Contract
 
@@ -60,6 +67,7 @@ Users also need a concise README catalog that makes the available skills discove
 - [ ] Both skills reuse the existing spec, ADR, test, and quality-gate conventions without companion setup.
 - [ ] The README groups every project-local skill by job and gives each a concise, user-facing purpose.
 - [ ] The README explains natural matching, named `$skill` invocation, and which workflows require explicit invocation.
+- [ ] The template includes a model-invoked `architecture-review` skill that combines durable capability contracts, deterministic source-shape checks, and advisory Fallow evidence.
 
 ### Regression Guardrails
 
@@ -80,6 +88,7 @@ Users also need a concise README catalog that makes the available skills discove
 - **Documentation check:** `npm run format:check`
 - **Wayfinder structure:** confirm the skill has valid `name` and `description` frontmatter plus valid `agents/openai.yaml`; use the skill-creator validator when its Python dependencies are available
 - **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
+- **Architecture review structure:** validate `.codex/skills/architecture-review/` metadata and confirm its workflow routes lasting outcomes into architecture docs, ADRs, or specs
 - **README catalog:** confirm every `.codex/skills/*/SKILL.md` has a corresponding README link and that explicit-only workflows are identified
 
 ### Scenarios
@@ -149,3 +158,9 @@ Users also need a concise README catalog that makes the available skills discove
 - Given: the user knows the job they need done but not the available skill names
 - When: they read the README skill catalog
 - Then: they can find the matching skill, understand its purpose, and either describe the job naturally or invoke it by `$skill-name`
+
+**Scenario: Capability expansion meets structural pressure**
+
+- Given: a capability is growing and source-shape or Fallow evidence indicates concentrated responsibility
+- When: the agent uses Architecture Review
+- Then: it returns Proceed, Consolidate first, or Decision required based on ownership and dependency evidence rather than recommending mechanical file splitting

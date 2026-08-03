@@ -100,6 +100,12 @@
 - Work in focused red-green slices with independent expected values and tests through public interfaces.
 - Skip TDD for documentation-only, prototype, generated, and purely mechanical changes; state the alternative verification instead.
 
+## Architecture Review
+
+- Use the project-local [`architecture-review`](./.codex/skills/architecture-review/SKILL.md) skill when adding or materially expanding an independently evolvable capability, when structural checks or Fallow diagnostics surface pressure, or when the user asks whether to consolidate before expanding scope.
+- Treat source-shape thresholds as architecture checkpoints rather than instructions to split files mechanically.
+- Require exact, rationale-bearing exceptions in `.architecture-check.json` when an oversized file or crowded directory is intentionally retained.
+
 ## Review
 
 - Use the project-local [`review`](./.codex/skills/review/SKILL.md) skill when the user asks for review, risk analysis, or a merge-readiness pass.
