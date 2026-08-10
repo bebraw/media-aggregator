@@ -77,6 +77,12 @@
 - Use the project-local [`frontend-design`](./.codex/skills/frontend-design/SKILL.md) skill for substantial UI work such as page redesigns, component styling, app shells, and frontend experiments.
 - Treat the skill as guidance for producing distinctive frontend work without compromising the template's lightweight and reusable nature unless the user explicitly asks for a more opinionated direction.
 
+## Modern Web Platform
+
+- Use the project-local [`modern-web-guidance`](./.codex/skills/modern-web-guidance/SKILL.md) skill when browser-facing work requires choosing an HTML, CSS, or Web API feature, interpreting compatibility, or designing a fallback; skip it for backend-only work, routine changes that apply established repository patterns, and general tooling.
+- Keep repository architecture, specs, source conventions, and tests authoritative over retrieved examples.
+- Target Baseline Widely available for core behavior. Use newer features as progressive enhancements unless the project explicitly documents a narrower browser target, and do not treat Chromium-only checks as proof of cross-browser compatibility.
+
 ## Brainstorming
 
 - Use the project-local [`brainstorming`](./.codex/skills/brainstorming/SKILL.md) skill when the user is exploring options, shaping a feature, or comparing approaches before implementation.

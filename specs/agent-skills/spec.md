@@ -12,6 +12,8 @@ Once decisions settle, the template should provide a direct repository-local pat
 
 Users also need a concise README catalog that makes the available skills discoverable, explains the job each one performs, and shows how to request one without reading every skill file first.
 
+Browser-facing implementation needs current web-platform and compatibility guidance without making a preview tool, a large vendored guide corpus, or a moving `@latest` package part of the application or quality gate.
+
 ### Architecture
 
 - **Canonical project-local skill root:** `.codex/skills/`
@@ -34,6 +36,12 @@ Users also need a concise README catalog that makes the available skills discove
 - **Behavior-first implementation skill:** `.codex/skills/tdd/`
 - **Capability architecture review skill:** `.codex/skills/architecture-review/`
 - **Architecture-feedback integration:** review-skill behavior is owned here; `specs/architecture-feedback/spec.md` owns its composition with deterministic source-shape evidence
+- **Web-platform implementation skill:** `.codex/skills/modern-web-guidance/`
+- **Web-platform instruction snapshot:** `GoogleChrome/modern-web-guidance` revision `684ab9d7c6b78fc2cd5677912d874397cb2e5dfa`, which labels itself `0.0.179`
+- **Web-platform CLI artifact:** telemetry-disabled `modern-web-guidance@0.0.180`, sourced from `GoogleChrome/modern-web-guidance-src` tag `v0.0.180` and commit `29ecd9546013e32e0a597ad5ab3a2fc26add1f1d`, with npm integrity `sha512-55diU2dH4nMF2DKWmvOdeLKWUvTTz32UIcSlYFSa+AN699MVC7pvqJ4mlFMmPd7qfnRJiP/FxKcSkIOP0MSDDw==`
+- **Browser-support target:** Baseline Widely available for core behavior, with progressive enhancement for newer features unless a project records a narrower target
+- **Guidance authority:** retrieved guidance informs implementation; repository architecture, specs, source conventions, and verification remain authoritative
+- **Browser verification boundary:** the current Playwright and Lighthouse setup provides Chromium evidence and does not claim cross-browser compatibility
 - **User-facing skill catalog:** `README.md`
 
 ### Anti-Patterns
@@ -53,6 +61,10 @@ Users also need a concise README catalog that makes the available skills discove
 - Do not let project initialization edit or prune a clone before the user approves an exact plan.
 - Do not duplicate complete skill workflows in the README; link to each `SKILL.md` as the source of truth.
 - Do not treat structural metrics as a substitute for reviewing capability ownership and dependency direction.
+- Do not invoke Modern Web Guidance for backend-only work, routine styling or behavior changes that apply established repository patterns, copy changes, CI, or general tooling.
+- Do not replace the pinned Modern Web Guidance CLI with `@latest`, enable its telemetry, or install its full guide corpus as a repository dependency.
+- Do not copy retrieved examples across local architecture or security boundaries, including the typed-client rule for browser behavior.
+- Do not infer cross-browser compatibility from Chromium-only automated checks.
 
 ## Contract
 
@@ -72,6 +84,9 @@ Users also need a concise README catalog that makes the available skills discove
 - [ ] The README explains natural matching, named `$skill` invocation, and which workflows require explicit invocation.
 - [ ] The template includes a model-invoked `architecture-review` skill that combines durable capability contracts, deterministic source-shape checks, and advisory Fallow evidence.
 - [ ] The template includes an explicitly invoked `start-project` skill whose behavior is owned by `specs/project-start/spec.md`.
+- [ ] The template includes a narrowly routed `modern-web-guidance` skill with reviewed provenance, an adjacent Apache-2.0 license, valid UI metadata, a pinned CLI version, and telemetry-disabled commands.
+- [ ] The browser-support target and the Chromium-only verification boundary are explicit in durable architecture and agent guidance.
+- [ ] Modern Web Guidance adds no application dependency, vendored guide corpus, automatic update path, or CI gate.
 
 ### Regression Guardrails
 
@@ -83,6 +98,9 @@ Users also need a concise README catalog that makes the available skills discove
 - To Spec must stop rather than invent an answer when a material contract or architecture decision remains unresolved.
 - TDD must prove the intended missing behavior with a failing test before changing production code.
 - TDD must allow explicit alternative verification for documentation, prototypes, generated output, and mechanical changes.
+- Modern Web Guidance upgrades must be reviewed deliberately and update the instruction snapshot, package version, source tag and commit, npm integrity, provenance, spec, ADR or successor decision, and portable update path together.
+- Features outside Baseline Widely available must preserve a usable core path unless a project explicitly records a narrower browser target.
+- Retrieved guidance must not override repository architecture, user instructions, dependency approval, or deterministic verification.
 
 ### Verification
 
@@ -94,6 +112,7 @@ Users also need a concise README catalog that makes the available skills discove
 - **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
 - **Architecture review structure:** validate `.codex/skills/architecture-review/` metadata and confirm its workflow routes lasting outcomes into architecture docs, ADRs, or specs
 - **Project start structure:** validate `.codex/skills/start-project/` metadata and confirm its workflow is read-only until the exact pruning plan is approved
+- **Modern web structure:** validate `.codex/skills/modern-web-guidance/`, confirm its commands pin `modern-web-guidance@0.0.180` with `DISABLE_TELEMETRY=1`, confirm `@latest` is absent, and verify the recorded npm source commit and integrity against registry metadata
 - **README catalog:** confirm every `.codex/skills/*/SKILL.md` has a corresponding README link and that explicit-only workflows are identified
 
 ### Scenarios
@@ -175,3 +194,27 @@ Users also need a concise README catalog that makes the available skills discove
 - Given: a capability is growing and source-shape or Fallow evidence indicates concentrated responsibility
 - When: the agent uses Architecture Review
 - Then: it returns Proceed, Consolidate first, or Decision required based on ownership and dependency evidence rather than recommending mechanical file splitting
+
+**Scenario: Substantive browser behavior needs a platform choice**
+
+- Given: a browser-facing task requires choosing an HTML or CSS platform feature, a browser API, a compatibility interpretation, or a fallback
+- When: an agent prepares the implementation
+- Then: it uses the pinned, telemetry-disabled Modern Web Guidance search and retrieves only focused relevant guides before adapting them to repository contracts
+
+**Scenario: Retrieved guidance conflicts with the repository**
+
+- Given: a retrieved example uses an inline handler, an unapproved dependency, or another pattern disallowed by local architecture
+- When: the agent applies the guidance
+- Then: it preserves the underlying platform recommendation while implementing it through the repository's typed, dependency-approved seams
+
+**Scenario: Feature is newer than the browser target**
+
+- Given: a useful feature is not Baseline Widely available
+- When: the agent proposes using it
+- Then: the feature progressively enhances a usable core path unless the project explicitly records a narrower browser target
+
+**Scenario: Browser task does not need platform guidance**
+
+- Given: a change only adjusts copy or applies established styling or behavior patterns without choosing a platform feature, interpreting compatibility, or designing a fallback
+- When: the agent routes the task
+- Then: it skips Modern Web Guidance and follows the smaller relevant workflow

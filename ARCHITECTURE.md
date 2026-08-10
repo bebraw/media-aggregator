@@ -25,6 +25,8 @@ Use this file for global constraints. Use feature specs under `specs/` for domai
 ## Tooling Baseline
 
 - Local development and local CI target macOS as the supported host platform baseline.
+- Browser-facing core behavior targets Baseline Widely available. Features outside that target require a usable core path or an explicitly documented narrower browser policy; Chromium-only browser checks do not establish cross-browser compatibility.
+- Use the scoped `modern-web-guidance` skill as pinned, telemetry-disabled implementation input for substantive web-platform decisions. Repository architecture, specs, source conventions, and verification remain authoritative, and upstream upgrades require deliberate review.
 - Use a connected Cloudflare MCP as the retrieval and account-operation layer for current Cloudflare product work. Keep only the `workers-best-practices` and `wrangler` skills in the template baseline; add product-specific Cloudflare skills when a project actually adopts those products.
 - Node is pinned exactly through `package.json`, and npm is constrained to a compatible major there instead of an exact patch pin.
 - The verification baseline is split into a fast gate and a browser gate so quick checks can return earlier without dropping full coverage.

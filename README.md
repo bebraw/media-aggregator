@@ -46,6 +46,7 @@ The repository includes focused instructions under `.codex/skills/` that help co
 
 - [`$frontend-design`](.codex/skills/frontend-design/SKILL.md) — design or substantially revise production-quality UI while preserving the starter's reusable nature.
 - [`$minimal-visual-style`](.codex/skills/minimal-visual-style/SKILL.md) — extend the existing minimal, editorial, token-driven visual language.
+- [`$modern-web-guidance`](.codex/skills/modern-web-guidance/SKILL.md) — retrieve pinned, telemetry-disabled, Baseline-aware implementation guidance for substantive browser-platform work.
 - [`$web-perf`](.codex/skills/web-perf/SKILL.md) — audit Core Web Vitals, loading behavior, network costs, layout shifts, and related accessibility signals.
 
 ### Cloudflare and Validation
