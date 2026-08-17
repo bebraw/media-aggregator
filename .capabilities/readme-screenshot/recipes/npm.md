@@ -5,7 +5,7 @@ Apply this recipe when the target repo uses npm.
 ## Package Changes
 
 ```bash
-npm install --save-dev @playwright/test@1.59.1
+npm install --save-dev --save-exact @playwright/test@1.62.1
 ```
 
 Add or merge:

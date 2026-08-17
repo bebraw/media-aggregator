@@ -49,6 +49,7 @@ copying unrelated starter structure.
   - `2026-08-03-architecture-feedback`
   - `2026-08-03-project-start-workflow`
   - `2026-08-10-scoped-modern-web-guidance`
+  - `2026-08-17-dependency-toolchain-refresh`
 
 ### Anti-Patterns
 

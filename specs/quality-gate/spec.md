@@ -35,8 +35,8 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - **Deep local gate:** `npm run quality:gate:deep`
 - **Full gate progress:** named phase transitions plus a 30-second elapsed-time heartbeat while a phase is running
 - **Local workflow:** `npm run ci:local`
-- **Local workflow concurrency:** Agent CI job auto-concurrency
-- **Local workflow failure mode:** pause failed Agent CI runners for retry
+- **Local workflow concurrency:** Local CI job auto-concurrency
+- **Local workflow failure mode:** pause failed Local CI runners for retry
 - **Retry command:** `npm run ci:local:retry -- --name <runner-name>`
 - **Remote workflow:** `.github/workflows/ci.yml`
 - **Remote expensive-gate classifier:** `scripts/classify-expensive-ci.mjs`
@@ -50,7 +50,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - **Affected file helper logic:** `scripts/affected-file-utils.mjs`
 - **Runtime pin source:** `package.json#engines.node`
 - **Package manager hint source:** `package.json#packageManager`
-- **Browser runtime image:** `mcr.microsoft.com/playwright:v1.61.1-noble`
+- **Browser runtime image:** `mcr.microsoft.com/playwright:v1.62.1-noble`
 - **Coverage gate logic:** `scripts/run-coverage-gate.mjs`
 - **Worker client-code guard:** `scripts/assert-no-worker-client-scripts.mjs`
 - **Codebase diagnostics config:** `.fallowrc.json`
@@ -72,7 +72,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - Do not treat advisory Fallow diagnostics as a replacement for formatting, type checking, runtime audit, unit coverage, browser tests, mutation testing, or Worker-specific guardrails.
 - Do not treat source-shape limits as decomposition targets or proof of architectural quality.
 - Do not treat targeted iteration checks as a replacement for `npm run quality:gate` on non-documentation changes.
-- Do not require Agent CI for changes that do not cross a documented workflow-sensitive boundary unless full PR or release readiness is explicitly requested.
+- Do not require Local CI for changes that do not cross a documented workflow-sensitive boundary unless full PR or release readiness is explicitly requested.
 - Do not add undocumented workflow write targets for generated output, local state, caches, archives, or tool artifacts.
 
 ## Contract
@@ -95,7 +95,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - [ ] The repo-managed `pre-push` hook runs affected-file guardrails before a push leaves the machine.
 - [ ] Local and remote CI use the same split verification model for non-documentation changes.
 - [ ] Remote browser and mutation jobs avoid dependency installation and gate execution for known non-runtime-only changes.
-- [ ] Local Agent CI is required for workflow-sensitive changes and explicit full PR or release readiness, but not for ordinary changes outside those boundaries.
+- [ ] Local CI is required for workflow-sensitive changes and explicit full PR or release readiness, but not for ordinary changes outside those boundaries.
 - [ ] The spec is updated in the same change set.
 
 ### Regression Guardrails
@@ -124,12 +124,12 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - The CI workflow must keep using npm for install and verification steps without depending on one exact npm patch release.
 - The npm release used by CI must stay inside the supported npm range declared in `package.json`.
 - CI jobs must install dependencies with plain `npm ci`.
-- Local Agent CI must rely on its built-in warm-cache preparation and isolated per-job dependency views instead of repo-local install locking.
-- Local Agent CI must explicitly prewarm through one stable npm install step before parallel jobs start.
+- Local CI must rely on its built-in warm-cache preparation and isolated per-job dependency views instead of repo-local install locking.
+- Local CI must explicitly prewarm through one stable npm install step before parallel jobs start.
 - The CI workflow must pin every GitHub Actions `uses:` action reference to a full commit SHA, with any tag information kept only as a comment.
 - The browser CI job must use a container image whose version exactly matches the pinned `@playwright/test` version instead of reinstalling Chromium at runtime.
 - The coverage gate must only require unit tests when runtime `src/` code exists.
-- The coverage gate must work in both the normal workspace and local Agent CI's warmed `node_modules` layout.
+- The coverage gate must work in both the normal workspace and Local CI's warmed `node_modules` layout.
 - The Worker client-code guard must fail on inline `<script>` tags, inline event-handler attributes, and `javascript:` URLs in Worker/view runtime files.
 - The affected guardrail path must pass only affected Worker/view runtime files to the Worker client-code guard.
 - The affected guardrail path must pass only affected JavaScript and TypeScript files to Oxlint.
@@ -141,19 +141,19 @@ The template needs a verification baseline that stays strict enough for end-to-e
 - The affected test path must run full unit coverage when affected-file helper logic changes.
 - The affected test path must run full unit coverage when affected runtime files have no related tests and no affected unit test files were supplied.
 - The affected guardrail path may fall back to project-level type checking or coverage when a safe per-file check is not available.
-- The repo's local CI scripts should use the repo-pinned `agent-ci` binary directly instead of carrying repo-specific runtime patching or install locking.
-- The canonical local CI script should rely on Agent CI's managed warm cache and per-job dependency isolation instead of forcing `--jobs 1` to avoid dependency races on macOS-hosted Docker.
-- The explicit Agent CI prewarm selector and its workflow install-step id must stay aligned.
+- The repo's local CI scripts should use the repo-pinned `local-ci` binary directly instead of carrying repo-specific runtime patching or install locking.
+- The canonical local CI script should rely on Local CI's managed warm cache and per-job dependency isolation instead of forcing `--jobs 1` to avoid dependency races on macOS-hosted Docker.
+- The explicit Local CI prewarm selector and its workflow install-step id must stay aligned.
 - The canonical local CI script should use pause-on-failure so agents can fix and retry a failed runner without restarting the whole workflow.
-- The canonical local CI script should combine quiet rendering with Agent CI's structured JSON event stream so agents receive run, job, step, pause, diagnostic, and completion progress without parsing animated terminal output.
+- The canonical local CI script should combine quiet rendering with Local CI's structured JSON event stream so agents receive run, job, step, pause, diagnostic, and completion progress without parsing animated terminal output.
 - Agent command wrappers should use an unbuffered passthrough mode for local CI so structured lifecycle events reach the caller while the workflow is still running.
 - The local verification workflow should document macOS as the supported host baseline instead of implying cross-platform support.
 - The Playwright server path must avoid macOS file-watcher exhaustion in local runs without changing the normal `npm run dev` workflow.
-- The local CI documentation must cover the no-`origin` case through `.env.agent-ci` and `GITHUB_REPO` instead of treating that warning as normal noise.
-- The local CI Docker daemon override must use Agent CI's `AGENT_CI_DOCKER_HOST` variable instead of the general Docker CLI `DOCKER_HOST` variable.
+- The local CI documentation must cover the no-`origin` case through `.env.local-ci` and `GITHUB_REPO` instead of treating that warning as normal noise.
+- The local CI Docker daemon override must use Local CI's `LOCAL_CI_DOCKER_HOST` variable instead of the general Docker CLI `DOCKER_HOST` variable.
 - Local Playwright browser installation should go through a pinned repo script instead of ad hoc `npx playwright install ...` usage.
 - Targeted checks may be documented for iteration, but `npm run quality:gate` remains the readiness baseline for non-documentation changes.
-- Local Agent CI must be required for changes to GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, and explicit full PR or release readiness checks.
+- Local CI must be required for changes to GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, and explicit full PR or release readiness checks.
 - Ordinary source, test, tooling, and documentation changes may skip `npm run ci:local` when they do not cross a workflow-sensitive boundary.
 - Mutation testing must exclude colocated tests, end-to-end tests, declarations, and `src/test-support.ts` from mutation.
 - Mutation testing must use the Vitest runner's per-test coverage analysis and related-test narrowing rather than an ad hoc minimization wrapper.
@@ -240,7 +240,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 
 - Given: a change affects GitHub Actions, dependency installation, build or container setup, browser CI setup, or an explicit full PR or release readiness check
 - When: the contributor runs `npm run quality:gate` and `npm run ci:local`
-- Then: the baseline gates pass and the split workflow is replayed in Agent CI, while GitHub supplies the clean full mutation signal for runtime-relevant changes
+- Then: the baseline gates pass and the split workflow is replayed in Local CI, while GitHub supplies the clean full mutation signal for runtime-relevant changes
 
 **Scenario: Contributor monitors the full quality gate**
 
@@ -251,7 +251,7 @@ The template needs a verification baseline that stays strict enough for end-to-e
 **Scenario: Agent monitors local CI progress**
 
 - Given: an agent runs the canonical local CI command
-- When: Agent CI advances through the workflow or pauses on a failure through any required command wrapper
+- When: Local CI advances through the workflow or pauses on a failure through any required command wrapper
 - Then: the command emits structured lifecycle events, including step transitions and the paused runner's retry command, without requiring animated terminal output
 
 **Scenario: Documentation-only change**

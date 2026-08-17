@@ -6,6 +6,8 @@
 
 **Amended by:** [ADR-034](./ADR-034-emit-agent-ci-progress-events.md)
 
+**Amended by:** [ADR-053](./ADR-053-adopt-local-ci-canonical-interface.md)
+
 **Date:** 2026-04-24
 
 ## Context

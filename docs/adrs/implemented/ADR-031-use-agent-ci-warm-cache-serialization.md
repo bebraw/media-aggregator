@@ -6,7 +6,7 @@
 
 **Supersedes:** [ADR-027](./ADR-027-lock-local-agent-ci-installs.md)
 
-**Amended by:** [ADR-034](./ADR-034-emit-agent-ci-progress-events.md), [ADR-036](./ADR-036-prewarm-agent-ci-dependencies-explicitly.md)
+**Amended by:** [ADR-034](./ADR-034-emit-agent-ci-progress-events.md), [ADR-036](./ADR-036-prewarm-agent-ci-dependencies-explicitly.md), [ADR-053](./ADR-053-adopt-local-ci-canonical-interface.md)
 
 ## Context
 

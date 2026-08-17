@@ -2,14 +2,14 @@
 
 Apply this recipe when the target repo uses npm and has a committed `package-lock.json`.
 
-If the target repo has no GitHub Actions workflow, follow `github-actions.md` before finalizing the Agent CI script because `ci:local` needs a workflow file to run.
+If the target repo has no GitHub Actions workflow, follow `github-actions.md` before finalizing the Local CI script because `ci:local` needs a workflow file to run.
 
 ## Package Changes
 
 Add the dev dependency:
 
 ```bash
-npm install --save-dev --save-exact @redwoodjs/agent-ci@0.17.1
+npm install --save-dev --save-exact run-local-ci@0.18.0
 ```
 
 Add or merge these scripts into `package.json`:
@@ -17,8 +17,8 @@ Add or merge these scripts into `package.json`:
 ```json
 {
   "scripts": {
-    "ci:local": "agent-ci run --quiet --json --pause-on-failure --workflow .github/workflows/ci.yml --prewarm-through .github/workflows/ci.yml:quality-fast:install",
-    "ci:local:retry": "agent-ci retry"
+    "ci:local": "local-ci run --quiet --json --pause-on-failure --workflow .github/workflows/ci.yml --prewarm-through .github/workflows/ci.yml:quality-fast:install",
+    "ci:local:retry": "local-ci retry"
   }
 }
 ```
@@ -39,8 +39,8 @@ Adjust the `--prewarm-through` workflow path and job identifier when the target 
 
 Copy:
 
-- `files/.env.agent-ci.example` to `.env.agent-ci.example`
-- `files/.codex/skills/agent-ci/SKILL.md` to `.codex/skills/agent-ci/SKILL.md`
+- `files/.env.local-ci.example` to `.env.local-ci.example`
+- `files/.codex/skills/local-ci/SKILL.md` to `.codex/skills/local-ci/SKILL.md`
 
 Merge with existing files when the target repo already has local env examples or Codex skills.
 
@@ -50,8 +50,8 @@ Document these target-project expectations wherever the repo keeps developer set
 
 - Docker must be running before `npm run ci:local`.
 - `npm run ci:local` is the local GitHub Actions check.
-- The local command emits Agent CI's structured NDJSON lifecycle stream so agents can track run, job, step, pause, and completion state.
-- Agent CI isolates each parallel job's writable `node_modules` view while retaining its managed warm cache.
+- The local command emits Local CI's structured NDJSON lifecycle stream so agents can track run, job, step, pause, and completion state.
+- Local CI isolates each parallel job's writable `node_modules` view while retaining its managed warm cache.
 - The explicit prewarm selector populates the dependency tree once before parallel jobs copy their private views.
-- `npm run ci:local:retry -- --name <runner-name>` resumes a paused Agent CI runner.
-- `.env.agent-ci` is local-only and may contain machine-specific Docker or repository overrides.
+- `npm run ci:local:retry -- --name <runner-name>` resumes a paused Local CI runner.
+- `.env.local-ci` is local-only and may contain machine-specific Docker or repository overrides.

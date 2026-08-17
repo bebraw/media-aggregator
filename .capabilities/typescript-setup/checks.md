@@ -11,7 +11,8 @@ npm run typecheck
 ## Expected Results
 
 - `package.json` contains a `typecheck` script.
-- `typescript` is installed as a dev dependency.
+- `typescript` is installed as the TypeScript 6 compatibility alias.
+- `typescript-7` is installed as the compiler used by the `typecheck` script.
 - `@types/node` is installed when `tsconfig.json` uses Node types.
 - `tsconfig.json` includes target-appropriate source and config globs.
 - `npm run typecheck` passes.

@@ -54,7 +54,7 @@ The repository includes focused instructions under `.codex/skills/` that help co
 - [`$workers-best-practices`](.codex/skills/workers-best-practices/SKILL.md) — author or review Worker code using current production guidance and repository conventions.
 - [`$wrangler`](.codex/skills/wrangler/SKILL.md) — guide Wrangler configuration and commands for local development, bindings, deployment, and platform resources.
 - [`$sandbox-sdk`](.codex/skills/sandbox-sdk/SKILL.md) — build applications that execute untrusted or agent-generated code in Cloudflare sandboxes.
-- [`$agent-ci`](.codex/skills/agent-ci/SKILL.md) — run the repository's GitHub Actions workflow locally for workflow-sensitive or release-readiness validation.
+- [`$local-ci`](.codex/skills/local-ci/SKILL.md) — run the repository's GitHub Actions workflow locally for workflow-sensitive or release-readiness validation.
 
 Each linked `SKILL.md` is the source of truth for boundaries and workflow details. Project-wide routing rules live in [`AGENTS.md`](AGENTS.md).
 
@@ -75,10 +75,10 @@ Each linked `SKILL.md` is the source of truth for boundaries and workflow detail
 - Run the fast local gate with `npm run quality:gate:fast` during normal iteration.
 - Run the baseline repo gate with `npm run quality:gate`.
 - Run the deterministic source-shape smoke alarms directly with `npm run quality:structure`; threshold failures call for architecture review or an exact rationale-bearing exception, not mechanical file splitting.
-- Run the containerized local workflow with `npm run ci:local` when changing GitHub Actions, dependencies or installation behavior, build or container setup, browser CI setup, or when performing a full PR or release readiness check. It emits structured run, job, and step progress for agents, uses Agent CI parallelism with warm-cache serialization, and pauses failed runners for retry.
+- Run the containerized local workflow with `npm run ci:local` when changing GitHub Actions, dependencies or installation behavior, build or container setup, browser CI setup, or when performing a full PR or release readiness check. It emits structured run, job, and step progress for agents, uses Local CI parallelism with warm-cache serialization, and pauses failed runners for retry.
 - Run advisory codebase readability diagnostics with `npm run diagnostics:codebase`.
 - The repo-managed `pre-push` hook runs `npm run quality:affected` automatically after `npm install`.
-- If local Agent CI warns about `No such remote 'origin'`, set `GITHUB_REPO=owner/repo` in `.env.agent-ci`.
+- If Local CI warns about `No such remote 'origin'`, set `GITHUB_REPO=owner/repo` in `.env.local-ci`.
 - Retry a paused local CI run with `npm run ci:local:retry -- --name <runner-name>`.
 - Install the pinned Playwright browser with `npm run playwright:install`.
 - Run unit tests from colocated `src/**/*.test.ts` files with `npm test`.

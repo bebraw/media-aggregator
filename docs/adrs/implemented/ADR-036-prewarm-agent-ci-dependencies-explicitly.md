@@ -6,6 +6,8 @@
 
 **Amends:** [ADR-031](./ADR-031-use-agent-ci-warm-cache-serialization.md)
 
+**Amended by:** [ADR-053](./ADR-053-adopt-local-ci-canonical-interface.md)
+
 ## Context
 
 Agent CI 0.17.1 fixes parallel cache races by giving every job a private

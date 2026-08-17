@@ -1,14 +1,14 @@
 # Optional GitHub Actions Recipe
 
-Use this recipe only when the target repo has no GitHub Actions workflow for Agent CI to run.
+Use this recipe only when the target repo has no GitHub Actions workflow for Local CI to run.
 
 Before adding a workflow, ask:
 
 ```text
-This repo has no GitHub Actions workflow for Agent CI to run. Do you want me to add a minimal npm CI workflow as part of this upgrade?
+This repo has no GitHub Actions workflow for Local CI to run. Do you want me to add a minimal npm CI workflow as part of this upgrade?
 ```
 
-Stop if the user says no. Agent CI should not introduce remote CI behavior without explicit approval.
+Stop if the user says no. Local CI should not introduce remote CI behavior without explicit approval.
 
 ## Minimal npm Workflow
 
@@ -27,7 +27,7 @@ permissions:
   contents: read
 
 jobs:
-  quality:
+  quality-fast:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +37,9 @@ jobs:
           node-version-file: package.json
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        id: install
+        run: npm ci
       - run: npm test
 ```
 

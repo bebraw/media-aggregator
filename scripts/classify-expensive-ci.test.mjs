@@ -9,7 +9,7 @@ test("skips expensive CI for known non-runtime files", () => {
     ".prettierignore",
     "docs/development.md",
     "specs/quality-gate/spec.md",
-    ".codex/skills/agent-ci/SKILL.md",
+    ".codex/skills/local-ci/SKILL.md",
     ".github/skills/example/SKILL.md",
     ".template/updates/example/README.md",
   ];

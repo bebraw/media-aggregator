@@ -4,8 +4,10 @@ Use this kit to add the template's strict no-emit TypeScript setup to another np
 
 ## Adds
 
-- Pinned `typescript` and `@types/node` dev dependencies.
-- A `typecheck` script that runs `tsc --noEmit`.
+- Pinned `typescript`, `typescript-7`, and `@types/node` dev dependencies.
+- A canonical TypeScript 6 compatibility alias for compiler-API tooling and a
+  `typescript-7` alias for the project typecheck command.
+- A `typecheck` script that runs the TypeScript 7 compiler with `--noEmit`.
 - A strict `tsconfig.json` for ES module projects with source under `src/` and root-level TypeScript config files.
 - Optional CSS import declaration support when TypeScript imports stylesheet assets.
 

@@ -9,7 +9,7 @@ Apply `.capabilities/typescript-setup/` first unless the target repo already has
 Add the fast-gate dependencies:
 
 ```bash
-npm install --save-dev prettier@3.8.3 vitest@4.1.5 @vitest/coverage-v8@4.1.5
+npm install --save-dev --save-exact prettier@3.9.6 vitest@4.1.10 @vitest/coverage-v8@4.1.10
 ```
 
 Add or merge these scripts:

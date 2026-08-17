@@ -8,6 +8,8 @@
 
 **Amends:** [ADR-019](./ADR-019-tighten-agent-workflow-guardrails.md)
 
+**Amended by:** [ADR-053](./ADR-053-adopt-local-ci-canonical-interface.md)
+
 ## Context
 
 The template currently requires both `npm run quality:gate` and `npm run ci:local` before every non-documentation change is ready. The quality gate already runs the deterministic fast and browser checks directly. Agent CI adds a distinct clean-container signal by replaying `.github/workflows/ci.yml`, but it also requires Docker, prewarms dependencies, and repeats much of the same verification.

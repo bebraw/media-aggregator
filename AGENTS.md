@@ -9,7 +9,7 @@
 | Intent         | Command                                                    | Notes                                                                                             |
 | -------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | Local CI       | `rtk proxy npm run ci:local`                               | Streams structured `.github/workflows/ci.yml` progress with local parallelism and quiet rendering |
-| Retry CI       | `rtk proxy npm run ci:local:retry -- --name <runner-name>` | Streams progress while retrying a paused local Agent CI runner                                    |
+| Retry CI       | `rtk proxy npm run ci:local:retry -- --name <runner-name>` | Streams progress while retrying a paused Local CI runner                                          |
 | Workflow notes | `docs/development.md`                                      | Setup details and prerequisites                                                                   |
 
 ## Judgment Boundaries
@@ -37,7 +37,7 @@
 - Add or update an ADR in `docs/adrs/` in the same change set whenever a decision introduces or changes a lasting architectural constraint, selects between credible alternatives, or supersedes an earlier architecture decision. Keep drafts in `docs/adrs/proposed/`, approved-but-not-yet-implemented decisions in `docs/adrs/accepted/`, and implemented decisions in `docs/adrs/implemented/`.
 - Record global architecture rules in `ARCHITECTURE.md` and feature-level contracts in `specs/{feature-domain}/spec.md`.
 - Treat completed feature work as spec work: create a new `specs/{feature-domain}/spec.md` or update the relevant existing spec in the same change set whenever feature behavior, contracts, workflows, or quality guardrails change.
-- Prefer the local Agent CI workflow before relying on remote CI when workflow-sensitive validation is required.
+- Prefer the Local CI workflow before relying on remote CI when workflow-sensitive validation is required.
 - Treat a non-documentation change as ready after the quality gate passes. Also require local CI when the change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when the user asks for full PR or release readiness.
 - Treat `package.json` as the source of truth for pinned Node and npm versions, with `.nvmrc` kept in sync as a convenience mirror for `nvm use`.
 - Read the relevant library or tool documentation carefully before applying, upgrading, or reconfiguring it in the project, especially when behavior is version-sensitive.
@@ -48,7 +48,7 @@
 - Treat high automated test coverage as part of done work for `src/` code. The baseline gate should fail when `src/` code exists without matching unit coverage.
 - Keep new workflow write targets explicit and documented instead of adding ad hoc file writes.
 - Use targeted checks while iterating, then run `npm run quality:gate` before treating a non-documentation change as ready.
-- Run `npm run ci:local` for workflow-sensitive changes and explicit full PR or release readiness checks. Ordinary source, test, and tooling changes that do not cross those boundaries do not require local Agent CI.
+- Run `npm run ci:local` for workflow-sensitive changes and explicit full PR or release readiness checks. Ordinary source, test, and tooling changes that do not cross those boundaries do not require Local CI.
 - For documentation-only changes that do not alter executable instructions or workflow contracts, use the smallest relevant local checks such as `npm run format:check`.
 
 ## TypeScript
@@ -58,12 +58,12 @@
 - Prefer explicit domain types over inferred object blobs, especially at module, API, fixture, and workflow boundaries.
 - Do not silence errors with `as unknown as`, `@ts-ignore`, or broad casts. Use local guards, narrower interfaces, or small helper types instead.
 
-## Agent CI
+## Local CI
 
-- Use the project-local [`agent-ci`](./.codex/skills/agent-ci/SKILL.md) skill when testing, running checks, or validating code changes before pushing.
-- Use Agent CI to validate workflow-sensitive changes before relying on remote GitHub Actions.
-- Require Agent CI when a change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when the user asks for full PR or release readiness.
-- Skip Agent CI for ordinary source, test, tooling, and documentation changes that do not cross those workflow-sensitive boundaries.
+- Use the project-local [`local-ci`](./.codex/skills/local-ci/SKILL.md) skill when testing, running checks, or validating code changes before pushing.
+- Use Local CI to validate workflow-sensitive changes before relying on remote GitHub Actions.
+- Require Local CI when a change touches GitHub Actions workflows, package metadata or dependency installation, build or container setup, browser CI setup, or when the user asks for full PR or release readiness.
+- Skip Local CI for ordinary source, test, tooling, and documentation changes that do not cross those workflow-sensitive boundaries.
 
 ## Cloudflare
 

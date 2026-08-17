@@ -1,13 +1,13 @@
-# Agent CI Capability Kit
+# Local CI Capability Kit
 
 Use this kit to add the repo's local GitHub Actions workflow loop to another project without cloning the whole template.
 
 ## Adds
 
-- A pinned `@redwoodjs/agent-ci` dev dependency.
-- Canonical local CI scripts with structured agent progress for running and retrying Agent CI.
-- A local `.env.agent-ci.example` for machine-specific overrides.
-- A Codex skill that teaches agents how to use Agent CI in the target repo.
+- A pinned `run-local-ci` dev dependency.
+- Canonical local CI scripts with structured agent progress for running and retrying Local CI.
+- A local `.env.local-ci.example` for machine-specific overrides.
+- A Codex skill that teaches agents how to use Local CI in the target repo.
 - Optional GitHub Actions setup guidance when the target repo has no workflow yet.
 
 ## Good Fit
@@ -28,11 +28,11 @@ Use this kit to add the repo's local GitHub Actions workflow loop to another pro
 1. Read `manifest.json` for the expected files, scripts, dependency, and checks.
 2. Check whether the target repo already has `.github/workflows/*.yml` or `.github/workflows/*.yaml`.
 3. If no workflow exists, ask the user before adding one:
-   `This repo has no GitHub Actions workflow for Agent CI to run. Do you want me to add a minimal npm CI workflow as part of this upgrade?`
+   `This repo has no GitHub Actions workflow for Local CI to run. Do you want me to add a minimal npm CI workflow as part of this upgrade?`
 4. If the user approves, follow `recipes/github-actions.md`.
 5. Follow `recipes/npm.md` for npm projects.
 6. Copy files from `files/` into the same relative paths in the target repo.
 7. Merge scripts and docs instead of overwriting target-project conventions.
 8. Run the checks in `checks.md`.
 
-For pnpm or Yarn projects, keep the same Agent CI concepts but translate dependency and script commands to the target package manager.
+For pnpm or Yarn projects, keep the same Local CI concepts but translate dependency and script commands to the target package manager.

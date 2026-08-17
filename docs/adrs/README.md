@@ -85,6 +85,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-050](./implemented/ADR-050-add-early-architecture-feedback.md)                    | Implemented | Add ownership contracts, structural smoke alarms, and capability architecture review.             |
 | [ADR-051](./implemented/ADR-051-add-approval-gated-project-start.md)                   | Implemented | Add a read-only project-start plan before approved pruning of a fresh clone.                      |
 | [ADR-052](./implemented/ADR-052-adopt-scoped-modern-web-guidance.md)                   | Implemented | Add pinned, telemetry-disabled web-platform guidance with explicit browser-support boundaries.    |
+| [ADR-053](./implemented/ADR-053-adopt-local-ci-canonical-interface.md)                 | Implemented | Use Local CI's canonical package, executable, configuration, and agent-skill names.               |
 
 ## Creating A New ADR
 
