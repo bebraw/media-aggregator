@@ -176,7 +176,7 @@ diff --git a/AGENTS.md b/AGENTS.md
 diff --git a/ARCHITECTURE.md b/ARCHITECTURE.md
 --- a/ARCHITECTURE.md
 +++ b/ARCHITECTURE.md
-@@ -13,6 +13,7 @@
+@@ -12,7 +12,8 @@
  - Treat specs and ADRs as the durable source of truth for expected behavior and architectural intent. Code, including AI-generated code, is only acceptable when it matches those documents or updates them intentionally in the same change set.
  - Add or update an ADR in `docs/adrs/` whenever a change introduces or changes a lasting architectural constraint, selects between credible architectural alternatives, or replaces an earlier decision. Keep drafts in `docs/adrs/proposed/`, approved-but-not-yet-implemented decisions in `docs/adrs/accepted/`, and implemented decisions in `docs/adrs/implemented/`.
  - Create or update the relevant feature spec in `specs/` in the same change set whenever feature behavior, contracts, workflows, or regression guardrails change.

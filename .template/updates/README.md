@@ -69,3 +69,8 @@ architecture-rule changes, and new reusable scripts.
 
 Do not create packs for one-off content edits or changes that only make sense
 inside this template.
+
+Before committing a pack, run
+`node --test scripts/template-update-patches.test.mjs`. Every `patch.diff` hunk
+must use standard unified-diff ranges such as `@@ -12,3 +12,4 @@`; a bare `@@`
+header is not an applicable patch.

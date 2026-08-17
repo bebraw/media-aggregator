@@ -74,6 +74,7 @@ copying unrelated starter structure.
 - [ ] Update metadata lists touched surfaces, related ADRs, risk, and checks.
 - [ ] Patch files are focused on reusable migration steps rather than whole
       template snapshots.
+- [ ] Every patch uses valid unified-diff hunk ranges and is parseable by Git.
 - [ ] Durable docs mention update packs as the template-maintenance sync path.
 - [ ] Downstream projects can prune historical packs without losing their upstream source, starting revision, or applied-update record.
 - [ ] The spec is updated in the same change set.
@@ -92,11 +93,13 @@ copying unrelated starter structure.
 - Backfilled packs should cover reusable historical changes, not every commit.
 - New reusable template maintenance changes should add or update an update pack
   in the same change set.
+- Bare `@@` hunk headers must fail the tooling test before an update pack lands.
 
 ### Verification
 
 - **Automated check:** `npm run quality:gate`; add `npm run ci:local` only when an update pack changes a workflow-sensitive boundary
-- **Manifest parse:** `node -e "for (const f of require('node:fs').readdirSync('.template/updates')) { if (f !== 'README.md') JSON.parse(require('node:fs').readFileSync('.template/updates/' + f + '/update.json', 'utf8')) }"`
+- **Patch syntax:** `node --test scripts/template-update-patches.test.mjs`
+- **Manifest parse:** `node -e "const fs = require('node:fs'); for (const entry of fs.readdirSync('.template/updates', { withFileTypes: true })) { if (entry.isDirectory()) JSON.parse(fs.readFileSync('.template/updates/' + entry.name + '/update.json', 'utf8')) }"`
 - **Docs check:** `rg "template update|\\.template/updates|update pack"`
 - **Agent entrypoint:** `test -f .template/updates/AGENT_SYNC.md`
 
@@ -113,6 +116,12 @@ copying unrelated starter structure.
 - Given: a downstream project renamed scripts or reorganized docs
 - When: the update pack patch does not apply cleanly
 - Then: the contributor follows the pack README and ports the behavior manually
+
+**Scenario: Contributor authors an update patch**
+
+- Given: an update pack contains one or more unified-diff hunks
+- When: the contributor runs the template update patch tooling test
+- Then: every hunk includes source and target ranges and Git can parse the patch
 
 **Scenario: New reusable template maintenance lands**
 

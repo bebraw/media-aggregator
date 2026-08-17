@@ -11,9 +11,10 @@ keeping TypeScript 6 compiler API compatibility for tools that still import the
 2. Add `typescript-7` as `npm:typescript@7.0.2`.
 3. Update the typecheck script to run
    `node ./node_modules/typescript-7/bin/tsc --noEmit`.
-4. Document the temporary compatibility layout in the target project's
+4. Regenerate the lockfile with the target project's package manager.
+5. Document the temporary compatibility layout in the target project's
    development notes.
-5. Add or update an ADR if the target project tracks toolchain decisions.
+6. Add or update an ADR if the target project tracks toolchain decisions.
 
 ## Fallback
 
