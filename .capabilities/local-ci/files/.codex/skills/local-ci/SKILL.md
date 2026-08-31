@@ -1,48 +1,24 @@
 ---
 name: local-ci
-description: Run GitHub Actions CI locally with Local CI. Use for workflow-sensitive validation, full PR or release readiness checks, and pause-and-retry debugging before pushing.
+description: Run the repository's GitHub Actions workflow locally for workflow-sensitive or explicit full-readiness validation and paused-runner retries.
 ---
 
 # Local CI
 
-Run the repository's GitHub Actions workflow locally with the repo-pinned Local CI dependency.
-
-## Run
-
-Use the canonical project command:
+Use the repository-pinned interface:
 
 ```bash
 npm run ci:local
 ```
 
-The script selects the repository workflow, prewarms dependencies, emits NDJSON lifecycle events, and pauses failed runners for retry.
+It prewarms dependencies, emits quiet NDJSON lifecycle events, and pauses failed runners. Preserve the event stream by using raw passthrough when a command wrapper is required.
 
-To run all relevant workflows outside the canonical script:
-
-```bash
-./node_modules/.bin/local-ci run --quiet --json --all --pause-on-failure
-```
-
-## Retry
-
-When a step fails, fix the issue and retry the paused runner:
+After fixing a paused job, retry it with:
 
 ```bash
 npm run ci:local:retry -- --name <runner-name>
 ```
 
-To re-run from an earlier step:
+Use `--from-step <N>` only when an earlier step must rerun. Non-TTY paused runs exit `77`; use the `run.paused` event's `retry_cmd` or the command above.
 
-```bash
-npm run ci:local:retry -- --name <runner-name> --from-step <N>
-```
-
-Repeat until all jobs pass. Do not push to trigger remote CI when Local CI can run the workflow locally.
-
-## Machine-readable output
-
-The canonical command combines `--json` with `--quiet`. Local CI emits one NDJSON object per line on stdout, including `run.start`, job and step lifecycle events, `run.paused`, `run.finish`, and diagnostics. Set `LOCAL_CI_JSON=1` when invoking the binary directly to enable the same stream.
-
-When stdout is not a TTY, `--pause-on-failure` detaches the worker and exits `77` when a step pauses. Use the `retry_cmd` from the `run.paused` event or the project retry command above.
-
-When repository instructions require an output-filtering command wrapper, use its raw passthrough or proxy mode so lifecycle events remain live.
+Do not push merely to obtain CI feedback that this local workflow provides. Skip Local CI for changes outside the repository's workflow-sensitive boundary unless the user asks for full PR or release readiness.

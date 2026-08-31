@@ -6,6 +6,8 @@
 
 The template should include agent workflows that are broadly useful to its baseline without vendoring large product documentation snapshots already available from connected platform tools.
 
+The skill baseline targets capable `gpt-5.6-sol`-class agents that can inspect repositories, use tools, and apply ordinary engineering judgment. Skill context should therefore carry only routing, project-specific decisions, non-obvious invariants, exact local interfaces, and safety boundaries.
+
 Large, uncertain initiatives also need a lightweight way to preserve discovery across sessions without requiring an external issue tracker or turning transient planning notes into architectural authority.
 
 Once decisions settle, the template should provide a direct repository-local path from discussion to its living feature spec and from that contract to behavior-first implementation.
@@ -21,11 +23,14 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - **Copy policy:** keep an intentional distribution copy byte-equivalent to its canonical `.codex/skills/` source unless the target surface requires a documented compatibility adaptation
 - **Composition roots:** `AGENTS.md` for model routing and `README.md` for user discovery
 - **Skill contracts:** each canonical `SKILL.md` plus optional `agents/openai.yaml`
+- **Agent capability baseline:** `gpt-5.6-sol`-class repository navigation, tool use, and engineering judgment
+- **Instruction budget:** concise descriptions and entrypoints; version-sensitive manuals stay in current primary documentation rather than the prompt
 - **Dependency direction:** routing and distribution surfaces point to canonical skills; canonical skills do not depend on their copies
 - **Cloudflare knowledge and account layer:** connected Cloudflare MCP
 - **Baseline Cloudflare implementation skill:** `workers-best-practices`
 - **Baseline Cloudflare CLI skill:** `wrangler`
 - **Specialized Cloudflare skills:** added on demand when their product is adopted
+- **Sandbox SDK skill:** absent until the project adopts `@cloudflare/sandbox`
 - **Repository-local wayfinding skill:** `.codex/skills/wayfinder/`
 - **Explicit project-start skill:** `.codex/skills/start-project/`
 - **Project-start behavior owner:** `specs/project-start/spec.md`
@@ -47,6 +52,9 @@ Browser-facing implementation needs current web-platform and compatibility guida
 ### Anti-Patterns
 
 - Do not vendor broad Cloudflare documentation snapshots when the connected MCP supplies current retrieval.
+- Do not embed static CLI catalogs, framework inventories, metric thresholds, or API tutorials that current tools and primary documentation can resolve.
+- Do not repeat generic model capabilities such as basic debugging, review, or design judgment when a project-specific constraint is sufficient.
+- Do not add persistent persona or output-compression skill suites to the template baseline.
 - Do not treat the MCP as a replacement for local Wrangler development, configuration, type generation, or testing workflows.
 - Do not retain product-specific skills for capabilities the template does not use.
 - Do not let intentional compatibility or capability-kit copies diverge from their canonical `.codex/skills/` source without a documented adaptation.
@@ -72,6 +80,7 @@ Browser-facing implementation needs current web-platform and compatibility guida
 
 - [ ] The template includes `workers-best-practices` and `wrangler` in both supported skill roots.
 - [ ] Broad and unused product-specific Cloudflare skill bundles are absent from both roots.
+- [ ] `sandbox-sdk` is absent while the repository has no Sandbox SDK runtime dependency or feature contract.
 - [ ] Agent guidance routes current Cloudflare documentation, API discovery, and account operations through the connected MCP.
 - [ ] Product-specific skills are introduced only with the capability that needs them.
 - [ ] The template includes an explicitly invoked `wayfinder` skill for large, uncertain, multi-session efforts.
@@ -81,6 +90,7 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - [ ] The template includes a model-invoked `tdd` skill for observable source behavior and regression fixes.
 - [ ] Both skills reuse the existing spec, ADR, test, and quality-gate conventions without companion setup.
 - [ ] The README groups every project-local skill by job and gives each a concise, user-facing purpose.
+- [ ] Skill descriptions remain discriminating and normally fit within 30 words; entrypoints contain only decision-changing guidance.
 - [ ] The README explains natural matching, named `$skill` invocation, and which workflows require explicit invocation.
 - [ ] The template includes a model-invoked `architecture-review` skill that combines durable capability contracts, deterministic source-shape checks, and advisory Fallow evidence.
 - [ ] The template includes an explicitly invoked `start-project` skill whose behavior is owned by `specs/project-start/spec.md`.
@@ -91,6 +101,9 @@ Browser-facing implementation needs current web-platform and compatibility guida
 ### Regression Guardrails
 
 - The baseline must not reintroduce `cloudflare`, `agents-sdk`, `cloudflare-email-service`, or `durable-objects` as vendored skills without an explicit architecture change.
+- The baseline must not reintroduce `sandbox-sdk` or communication-style skill suites without adopting their capability explicitly.
+- Compact rewrites must preserve destructive-action approval, secret handling, retrieval pins, telemetry controls, public-seam testing, evidence thresholds, and repository verification rules.
+- Version-sensitive commands and thresholds must be retrieved or resolved from installed tool help rather than accumulated in skill entrypoints.
 - The Worker and Wrangler skill copies must remain available while this repository is a Cloudflare Worker starter.
 - Removing a baseline skill must not remove its runtime dependency or product implementation implicitly.
 - Wayfinding must remain optional, repository-local, and independent of issue-tracker infrastructure.
@@ -106,7 +119,8 @@ Browser-facing implementation needs current web-platform and compatibility guida
 
 - **Skill presence:** `test -f .codex/skills/workers-best-practices/SKILL.md && test -f .codex/skills/wrangler/SKILL.md`
 - **Mirror presence:** `test -f .github/skills/workers-best-practices/SKILL.md && test -f .github/skills/wrangler/SKILL.md`
-- **Pruned bundles:** confirm the four removed skill directories are absent from both roots
+- **Pruned bundles:** confirm unused Cloudflare product skills, `sandbox-sdk`, and communication-style suites are absent from repository skill roots
+- **Instruction size:** inspect `wc -w $(rg --files .codex/skills -g SKILL.md)` and review any entrypoint whose growth is not justified by a fragile workflow or safety boundary
 - **Documentation check:** `npm run format:check`
 - **Wayfinder structure:** confirm the skill has valid `name` and `description` frontmatter plus valid `agents/openai.yaml`; use the skill-creator validator when its Python dependencies are available
 - **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
@@ -131,9 +145,15 @@ Browser-facing implementation needs current web-platform and compatibility guida
 
 **Scenario: Project adopts a specialized Cloudflare product**
 
-- Given: the project adds Agents SDK, Durable Objects, or Email Service
+- Given: the project adds Agents SDK, Durable Objects, Email Service, or Sandbox SDK
 - When: specialized implementation guidance becomes useful
 - Then: the project adds only the relevant skill rather than restoring the complete Cloudflare bundle
+
+**Scenario: Agent needs version-sensitive syntax**
+
+- Given: an installed CLI, platform API, or browser metric may have changed
+- When: a skill guides implementation or review
+- Then: the agent retrieves current primary documentation or installed-tool help and keeps only project-specific invariants in prompt context
 
 **Scenario: Initiative is too uncertain to specify**
 

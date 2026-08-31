@@ -20,7 +20,7 @@ Local development in this repo targets macOS. Other platforms may need script an
 
 ## Agent Skills
 
-The repository includes focused instructions under `.codex/skills/` that help coding agents follow its conventions. You can describe the job normally and let the agent select a matching skill, or require one by name—for example, `Use $security to review this authentication change`.
+The repository includes compact instructions under `.codex/skills/` that help capable coding agents follow project-specific conventions without repeating generic engineering guidance. Version-sensitive details come from current primary sources. You can describe the job normally and let the agent select a matching skill, or require one by name—for example, `Use $security to review this authentication change`.
 
 `$start-project`, `$wayfinder`, and `$to-spec` are intentionally explicit: the agent uses them only when you name them. This keeps repository pruning, exploratory maps, and durable specifications from appearing as accidental side effects.
 
@@ -47,13 +47,12 @@ The repository includes focused instructions under `.codex/skills/` that help co
 - [`$frontend-design`](.codex/skills/frontend-design/SKILL.md) — design or substantially revise production-quality UI while preserving the starter's reusable nature.
 - [`$minimal-visual-style`](.codex/skills/minimal-visual-style/SKILL.md) — extend the existing minimal, editorial, token-driven visual language.
 - [`$modern-web-guidance`](.codex/skills/modern-web-guidance/SKILL.md) — retrieve pinned, telemetry-disabled, Baseline-aware implementation guidance for substantive browser-platform work.
-- [`$web-perf`](.codex/skills/web-perf/SKILL.md) — audit Core Web Vitals, loading behavior, network costs, layout shifts, and related accessibility signals.
+- [`$web-perf`](.codex/skills/web-perf/SKILL.md) — measure Core Web Vitals, loading behavior, interaction responsiveness, and network costs.
 
 ### Cloudflare and Validation
 
 - [`$workers-best-practices`](.codex/skills/workers-best-practices/SKILL.md) — author or review Worker code using current production guidance and repository conventions.
 - [`$wrangler`](.codex/skills/wrangler/SKILL.md) — guide Wrangler configuration and commands for local development, bindings, deployment, and platform resources.
-- [`$sandbox-sdk`](.codex/skills/sandbox-sdk/SKILL.md) — build applications that execute untrusted or agent-generated code in Cloudflare sandboxes.
 - [`$local-ci`](.codex/skills/local-ci/SKILL.md) — run the repository's GitHub Actions workflow locally for workflow-sensitive or release-readiness validation.
 
 Each linked `SKILL.md` is the source of truth for boundaries and workflow details. Project-wide routing rules live in [`AGENTS.md`](AGENTS.md).

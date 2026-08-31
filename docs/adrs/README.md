@@ -86,6 +86,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-051](./implemented/ADR-051-add-approval-gated-project-start.md)                   | Implemented | Add a read-only project-start plan before approved pruning of a fresh clone.                      |
 | [ADR-052](./implemented/ADR-052-adopt-scoped-modern-web-guidance.md)                   | Implemented | Add pinned, telemetry-disabled web-platform guidance with explicit browser-support boundaries.    |
 | [ADR-053](./implemented/ADR-053-adopt-local-ci-canonical-interface.md)                 | Implemented | Use Local CI's canonical package, executable, configuration, and agent-skill names.               |
+| [ADR-054](./implemented/ADR-054-target-a-compact-agent-skill-baseline.md)              | Implemented | Target capable agents with compact, retrieval-first skills and remove overlapping or unused ones. |
 
 ## Creating A New ADR
 
