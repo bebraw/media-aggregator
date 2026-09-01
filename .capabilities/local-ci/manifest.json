@@ -3,7 +3,7 @@
   "description": "Add local GitHub Actions execution through Local CI.",
   "dependencies": {
     "dev": {
-      "run-local-ci": "0.18.0"
+      "run-local-ci": "0.18.1"
     }
   },
   "scripts": {

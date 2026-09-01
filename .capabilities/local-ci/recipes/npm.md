@@ -9,7 +9,7 @@ If the target repo has no GitHub Actions workflow, follow `github-actions.md` be
 Add the dev dependency:
 
 ```bash
-npm install --save-dev --save-exact run-local-ci@0.18.0
+npm install --save-dev --save-exact run-local-ci@0.18.1
 ```
 
 Add or merge these scripts into `package.json`:
