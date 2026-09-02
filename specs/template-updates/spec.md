@@ -4,11 +4,10 @@
 
 ### Context
 
-Projects that start from `vibe-template` diverge quickly. Direct Git merges from
-the template become noisy once a downstream project has changed source files,
-docs, package scripts, or CI workflow names. Contributors need a lightweight way
-to pull selected template maintenance changes into those projects without
-copying unrelated starter structure.
+`media-aggregator` will diverge from its `vibe-template` baseline. Direct Git
+merges become noisy once product source, docs, scripts, and workflows change.
+The retained update packs provide a lightweight, reviewable route for applying
+selected upstream maintenance without copying unrelated starter structure.
 
 ### Architecture
 
@@ -56,8 +55,8 @@ copying unrelated starter structure.
 
 - Do not make update packs hidden automation that rewrites target projects
   without review.
-- Do not treat update packs as a replacement for capability kits when a target
-  project is adopting a capability for the first time.
+- Do not use retained update packs to restore removed template distribution
+  surfaces unless the product explicitly adopts them again.
 - Do not include secrets, machine-local values, generated reports, or local
   caches in update packs.
 - Do not assume target projects kept this template's exact package manager,
@@ -93,8 +92,8 @@ copying unrelated starter structure.
   engineering.
 - A pruned downstream project must be able to discover its template source and baseline from existing package metadata or durable docs.
 - Backfilled packs should cover reusable historical changes, not every commit.
-- New reusable template maintenance changes should add or update an update pack
-  in the same change set.
+- New product changes do not create update packs; those packs remain an upstream
+  maintenance input owned by `vibe-template`.
 - Bare `@@` hunk headers must fail the tooling test before an update pack lands.
 
 ### Verification
@@ -125,11 +124,11 @@ copying unrelated starter structure.
 - When: the contributor runs the template update patch tooling test
 - Then: every hunk includes source and target ranges and Git can parse the patch
 
-**Scenario: New reusable template maintenance lands**
+**Scenario: New upstream template maintenance lands**
 
-- Given: a template change affects downstream maintenance behavior
-- When: the change is implemented
-- Then: the same change set adds or updates a `.template/updates/` pack
+- Given: upstream publishes a template change relevant to this project
+- When: the project reviews its retained update packs or upstream sync entrypoint
+- Then: only an explicitly approved update is ported into the product
 
 **Scenario: User points an agent at vibe-template**
 

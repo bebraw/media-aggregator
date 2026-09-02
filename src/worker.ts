@@ -1,5 +1,6 @@
 import { createHealthResponse } from "./api/health";
-import { exampleRoutes } from "./app-routes";
+import { appRoutes } from "./app-routes";
+import { parseRegionFilter, selectPreviewHeadlines } from "./news/preview-headlines";
 import { renderHomePage } from "./views/home";
 import { renderNotFoundPage } from "./views/not-found";
 import { cssResponse, htmlResponse } from "./views/shared";
@@ -18,11 +19,17 @@ export async function handleRequest(request: Request): Promise<Response> {
   }
 
   if (url.pathname === "/") {
-    return htmlResponse(renderHomePage(exampleRoutes));
+    const activeRegion = parseRegionFilter(url.searchParams.get("region"));
+    return htmlResponse(
+      renderHomePage({
+        headlines: selectPreviewHeadlines(activeRegion),
+        activeRegion,
+      }),
+    );
   }
 
   if (url.pathname === "/api/health") {
-    return createHealthResponse(exampleRoutes.map((route) => route.path));
+    return createHealthResponse(appRoutes.map((route) => route.path));
   }
 
   return htmlResponse(renderNotFoundPage(url.pathname), 404);

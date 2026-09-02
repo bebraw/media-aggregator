@@ -1,6 +1,11 @@
 {
-  "name": "vibe-template",
+  "name": "media-aggregator",
   "private": true,
+  "vibeTemplate": {
+    "source": "git@github.com:bebraw/vibe-template.git",
+    "baseline": "df2df206ba96220500c8e0e5473bcad06f5cb4b1",
+    "updates": []
+  },
   "packageManager": "npm@11.19.1",
   "engines": {
     "node": "24.20.0",

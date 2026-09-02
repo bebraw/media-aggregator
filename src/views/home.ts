@@ -1,23 +1,32 @@
+import { headlineRegions, type Headline, type RegionFilter } from "../news/preview-headlines";
 import { escapeHtml } from "./shared";
 
-const appTitle = "vibe-template Worker";
-const appDescription = "A runnable Cloudflare Worker baseline with a route index, a health probe, and room for real feature work.";
+const appTitle = "GLOBAL HEADLINE INDEX";
+const appDescription = "A direct global view of major headlines, translated into English and linked back to the original reporting.";
 
-export function renderHomePage(routes: Array<{ path: string; purpose: string }>): string {
-  const routeList = routes
-    .map(
-      (route) =>
-        `<li>
-          <a class="group flex items-start justify-between gap-4 py-4 first:pt-0 last:pb-0" href="${escapeHtml(route.path)}">
-            <div>
-              <code class="text-sm font-semibold tracking-[0.02em] text-app-accent-strong">${escapeHtml(route.path)}</code>
-              <p class="mt-2 max-w-2xl leading-7 text-app-text-soft">${escapeHtml(route.purpose)}</p>
-            </div>
-            <span class="pt-1 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-app-text-soft transition group-hover:text-app-accent">Open</span>
-          </a>
-        </li>`,
-    )
+interface RenderHomePageOptions {
+  headlines: readonly Headline[];
+  activeRegion: RegionFilter;
+}
+
+export function renderHomePage({ headlines, activeRegion }: RenderHomePageOptions): string {
+  const filters = headlineRegions
+    .map((region) => {
+      const isActive = region.slug === activeRegion;
+      const href = region.slug === "all" ? "/" : `/?region=${region.slug}`;
+      const activeLabel = isActive ? `${region.label} / active` : region.label;
+
+      return `<a
+        class="border-r-2 border-app-line px-3 py-3 text-[0.68rem] font-black uppercase tracking-[0.12em] last:border-r-0 hover:bg-app-signal focus-visible:z-10 focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-app-blue sm:px-4"
+        href="${href}"
+        ${isActive ? 'aria-current="page"' : ""}
+        aria-label="${escapeHtml(activeLabel)}"
+      >${escapeHtml(region.label)}</a>`;
+    })
     .join("");
+
+  const headlineItems = headlines.map(renderHeadline).join("");
+  const headlineCount = `${headlines.length} HEADLINE${headlines.length === 1 ? "" : "S"}`;
 
   return `<!doctype html>
 <html lang="en">
@@ -26,47 +35,107 @@ export function renderHomePage(routes: Array<{ path: string; purpose: string }>)
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${escapeHtml(appDescription)}">
     <meta name="color-scheme" content="light">
-    <title>${escapeHtml(appTitle)}</title>
+    <title>${escapeHtml(appTitle)} — Media Aggregator</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body class="min-h-screen bg-app-canvas text-app-text antialiased">
-    <a class="fixed left-4 top-4 z-10 -translate-y-24 rounded-lg bg-app-text px-4 py-3 font-semibold text-app-canvas transition focus:translate-y-0" href="#main">Skip to main content</a>
-    <main id="main" class="mx-auto w-[min(46rem,calc(100vw-2rem))] py-12 sm:py-16">
-      <article class="space-y-10">
-        <section>
-          <p class="mb-4 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-app-accent">Starter Surface</p>
-          <h1 class="max-w-[10ch] text-5xl leading-[0.92] font-semibold tracking-[-0.055em] sm:text-7xl">${escapeHtml(appTitle)}</h1>
-          <p class="mt-5 max-w-2xl text-lg leading-8 text-app-text-soft">${escapeHtml(appDescription)}</p>
-        </section>
-        <section class="rounded-[1.6rem] border border-app-line/90 bg-app-surface/90 p-3 shadow-panel">
-          <a class="group flex items-center justify-between gap-4 rounded-[1.2rem] border border-app-line/80 bg-white/78 px-5 py-4 transition hover:border-app-accent/35 hover:bg-app-accent-ghost focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent/40" href="/api/health">
-            <div>
-              <p class="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-app-text-soft">Primary Check</p>
-              <p class="mt-2 text-xl font-semibold tracking-[-0.03em] text-app-text">/api/health</p>
-            </div>
-            <span class="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-app-accent transition group-hover:text-app-accent-strong">Open JSON</span>
-          </a>
-          <p class="px-2 pt-3 text-sm leading-6 text-app-text-soft">Use the health probe to confirm the Worker is live, then replace this stub with the feature you actually want to ship.</p>
-        </section>
-        <section class="border-y border-app-line/90 py-4">
-          <div class="mb-4 flex items-end justify-between gap-4">
-            <h2 class="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-app-text-soft">Route Index</h2>
-            <p class="text-sm text-app-text-soft">Shipped with the starter</p>
+    <a class="fixed left-3 top-3 z-50 -translate-y-24 border-2 border-app-line bg-app-signal px-4 py-3 font-black uppercase transition focus:translate-y-0" href="#main">Skip to main content</a>
+
+    <header class="border-b-[3px] border-app-line">
+      <div class="flex min-h-10 items-stretch justify-between border-b-2 border-app-line bg-app-text text-app-canvas">
+        <p class="flex items-center px-3 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:px-5">Media aggregator / 001</p>
+        <p class="flex items-center border-l-2 border-app-canvas/40 bg-app-red px-3 font-mono text-[0.68rem] font-black uppercase tracking-[0.12em] text-white sm:px-5">PREVIEW DATA / NOT LIVE</p>
+      </div>
+
+      <div class="grid lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div class="border-b-[3px] border-app-line p-4 sm:p-6 lg:border-r-[3px] lg:border-b-0">
+          <p class="mb-3 font-mono text-xs font-bold uppercase tracking-[0.18em]">One screen. Many regions. Original sources.</p>
+          <h1 aria-label="GLOBAL HEADLINE INDEX" class="max-w-[10ch] text-[clamp(3.4rem,10vw,9.5rem)] leading-[0.75] font-black tracking-[-0.085em] uppercase">Global<br>Headline<br>Index</h1>
+        </div>
+        <div class="grid grid-rows-[1fr_auto]">
+          <div class="flex flex-col justify-between gap-8 p-5 sm:p-7">
+            <p class="max-w-[28rem] text-lg leading-[1.25] font-bold tracking-[-0.02em]">${escapeHtml(appDescription)}</p>
+            <dl class="grid grid-cols-2 border-2 border-app-line font-mono text-[0.68rem] uppercase">
+              <div class="border-r-2 border-app-line p-3">
+                <dt class="text-app-muted">Mode</dt>
+                <dd class="mt-1 font-black">Local preview</dd>
+              </div>
+              <div class="p-3">
+                <dt class="text-app-muted">Sources live</dt>
+                <dd class="mt-1 font-black">0 / 6</dd>
+              </div>
+            </dl>
           </div>
-          <ul class="divide-y divide-app-line/90">${routeList}</ul>
-        </section>
-        <section class="space-y-4">
-          <div class="border-t border-app-line pt-4">
-            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-app-text-soft">What ships</p>
-            <p class="mt-2 leading-7 text-app-text-soft">Server-rendered HTML, generated Tailwind CSS, and a JSON health endpoint. Enough surface area to run tests immediately without carrying a heavy starter shell.</p>
+          <div class="border-t-2 border-app-line bg-app-signal p-4 font-mono text-xs font-black uppercase leading-5">
+            Synthetic headlines for interface review. Live feeds and translation are the next implementation boundary.
           </div>
-          <div class="border-t border-app-line pt-4">
-            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-app-text-soft">What to replace</p>
-            <p class="mt-2 leading-7 text-app-text-soft">Swap the route index and starter copy for your real feature work, then update the relevant spec and keep the quality gate green.</p>
-          </div>
-        </section>
-      </article>
+        </div>
+      </div>
+
+      <nav aria-label="Filter headlines by region" class="overflow-x-auto border-t-[3px] border-app-line bg-app-surface">
+        <div class="flex min-w-max">${filters}</div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section aria-labelledby="headline-count">
+        <div class="flex items-center justify-between border-b-[3px] border-app-line px-4 py-3 sm:px-6">
+          <h2 id="headline-count" class="font-mono text-xs font-black uppercase tracking-[0.16em]">Index / ${headlineCount}</h2>
+          <p class="font-mono text-[0.68rem] font-bold uppercase text-app-muted">Order / newest first</p>
+        </div>
+        <div>${headlineItems}</div>
+      </section>
     </main>
+
+    <footer class="grid border-t-[3px] border-app-line bg-app-text text-app-canvas sm:grid-cols-3">
+      <p class="border-b border-app-canvas/40 p-4 font-mono text-[0.68rem] uppercase sm:border-r sm:border-b-0">Build / interface review</p>
+      <p class="border-b border-app-canvas/40 p-4 font-mono text-[0.68rem] uppercase sm:border-r sm:border-b-0">Content / synthetic</p>
+      <a class="p-4 font-mono text-[0.68rem] font-bold uppercase hover:bg-app-blue focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-app-signal" href="/api/health">System health ↗</a>
+    </footer>
   </body>
 </html>`;
+}
+
+function renderHeadline(headline: Headline, index: number): string {
+  const sourceUrl = safeExternalUrl(headline.url);
+  const isTranslated = headline.languageCode !== "EN";
+  const languageLabel = isTranslated ? `${headline.languageCode} → EN` : "EN / ORIGINAL";
+  const originalHeadline = isTranslated
+    ? `<p class="mt-3 max-w-3xl font-mono text-xs leading-5 text-app-muted" lang="${escapeHtml(headline.languageCode.toLowerCase())}"><span class="font-black uppercase">Original / </span>${escapeHtml(headline.originalHeadline)}</p>`
+    : "";
+
+  return `<article class="group grid border-b-2 border-app-line bg-app-surface last:border-b-0 md:grid-cols-[8rem_minmax(0,1fr)_9rem]">
+    <div class="flex items-start justify-between border-b-2 border-app-line bg-app-signal p-4 md:block md:border-r-2 md:border-b-0">
+      <p class="text-5xl leading-none font-black tracking-[-0.08em]">${String(index + 1).padStart(2, "0")}</p>
+      <p class="font-mono text-[0.65rem] font-black uppercase tracking-[0.1em] md:mt-6">${escapeHtml(headline.region)}</p>
+    </div>
+
+    <div class="p-4 sm:p-6">
+      <div class="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.68rem] font-bold uppercase tracking-[0.08em]">
+        <span class="bg-app-text px-2 py-1 text-app-canvas">${escapeHtml(headline.source)}</span>
+        <span>${escapeHtml(languageLabel)}</span>
+        <span class="text-app-muted">${escapeHtml(headline.publishedLabel)}</span>
+      </div>
+      <h3 class="max-w-[30ch] text-[clamp(1.8rem,4.4vw,3.8rem)] leading-[0.95] font-black tracking-[-0.055em]">${escapeHtml(headline.translatedHeadline)}</h3>
+      ${originalHeadline}
+    </div>
+
+    <a
+      class="flex min-h-20 items-center justify-between border-t-2 border-app-line p-4 font-mono text-[0.68rem] font-black uppercase tracking-[0.08em] hover:bg-app-blue hover:text-white focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-app-blue md:min-h-full md:flex-col md:items-start md:border-t-0 md:border-l-2"
+      href="${escapeHtml(sourceUrl)}"
+      rel="external noreferrer"
+    >
+      <span>View source</span>
+      <span aria-hidden="true" class="text-2xl">↗</span>
+    </a>
+  </article>`;
+}
+
+function safeExternalUrl(value: string): string {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.href : "#";
+  } catch {
+    return "#";
+  }
 }

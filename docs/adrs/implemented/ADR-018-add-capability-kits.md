@@ -1,6 +1,6 @@
 # ADR-018: Add Capability Kits
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-055](./ADR-055-initialize-media-aggregator.md)
 
 **Date:** 2026-04-24
 

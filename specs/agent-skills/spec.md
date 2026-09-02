@@ -4,22 +4,22 @@
 
 ### Context
 
-The template should include agent workflows that are broadly useful to its baseline without vendoring large product documentation snapshots already available from connected platform tools.
+The project should retain agent workflows that are useful to its Worker baseline without vendoring large product documentation snapshots already available from connected platform tools.
 
 The skill baseline targets capable `gpt-5.6-sol`-class agents that can inspect repositories, use tools, and apply ordinary engineering judgment. Skill context should therefore carry only routing, project-specific decisions, non-obvious invariants, exact local interfaces, and safety boundaries.
 
 Large, uncertain initiatives also need a lightweight way to preserve discovery across sessions without requiring an external issue tracker or turning transient planning notes into architectural authority.
 
-Once decisions settle, the template should provide a direct repository-local path from discussion to its living feature spec and from that contract to behavior-first implementation.
+Once decisions settle, the project should provide a direct repository-local path from discussion to its living feature spec and from that contract to behavior-first implementation.
 
-Users also need a concise README catalog that makes the available skills discoverable, explains the job each one performs, and shows how to request one without reading every skill file first.
+Contributors also need a concise README catalog that makes the available skills discoverable, explains the job each one performs, and shows how to request one without reading every skill file first.
 
 Browser-facing implementation needs current web-platform and compatibility guidance without making a preview tool, a large vendored guide corpus, or a moving `@latest` package part of the application or quality gate.
 
 ### Architecture
 
 - **Canonical project-local skill root:** `.codex/skills/`
-- **Selective compatibility copies:** `.github/skills/` and capability-kit `files/` only for skills intentionally distributed through those surfaces
+- **Selective compatibility copies:** `.github/skills/` only for skills intentionally exposed through that compatibility surface
 - **Copy policy:** keep an intentional distribution copy byte-equivalent to its canonical `.codex/skills/` source unless the target surface requires a documented compatibility adaptation
 - **Composition roots:** `AGENTS.md` for model routing and `README.md` for user discovery
 - **Skill contracts:** each canonical `SKILL.md` plus optional `agents/openai.yaml`
@@ -32,8 +32,6 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - **Specialized Cloudflare skills:** added on demand when their product is adopted
 - **Sandbox SDK skill:** absent until the project adopts `@cloudflare/sandbox`
 - **Repository-local wayfinding skill:** `.codex/skills/wayfinder/`
-- **Explicit project-start skill:** `.codex/skills/start-project/`
-- **Project-start behavior owner:** `specs/project-start/spec.md`
 - **Wayfinding map:** `docs/wayfinding/<effort>.md`
 - **Wayfinding authority:** working context only; lasting decisions graduate into architecture docs, ADRs, and specs
 - **Repository-local specification skill:** `.codex/skills/to-spec/`
@@ -57,7 +55,7 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - Do not add persistent persona or output-compression skill suites to the template baseline.
 - Do not treat the MCP as a replacement for local Wrangler development, configuration, type generation, or testing workflows.
 - Do not retain product-specific skills for capabilities the template does not use.
-- Do not let intentional compatibility or capability-kit copies diverge from their canonical `.codex/skills/` source without a documented adaptation.
+- Do not let intentional compatibility copies diverge from their canonical `.codex/skills/` source without a documented adaptation.
 - Do not require GitHub Issues, labels, assignments, tracker setup, or a companion skill suite for wayfinding.
 - Do not treat a wayfinding map as the durable source of truth for architecture or feature behavior.
 - Do not invoke wayfinding for work that is already clear enough to specify or implement in one session.
@@ -66,7 +64,6 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - Do not force TDD onto changes without meaningful observable behavior or a stable test seam.
 - Do not write tautological or implementation-coupled tests merely to satisfy a test-first sequence.
 - Do not make users inspect the skill directory to discover names, purposes, or invocation behavior.
-- Do not let project initialization edit or prune a clone before the user approves an exact plan.
 - Do not duplicate complete skill workflows in the README; link to each `SKILL.md` as the source of truth.
 - Do not treat structural metrics as a substitute for reviewing capability ownership and dependency direction.
 - Do not invoke Modern Web Guidance for backend-only work, routine styling or behavior changes that apply established repository patterns, copy changes, CI, or general tooling.
@@ -93,7 +90,6 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - [ ] Skill descriptions remain discriminating and normally fit within 30 words; entrypoints contain only decision-changing guidance.
 - [ ] The README explains natural matching, named `$skill` invocation, and which workflows require explicit invocation.
 - [ ] The template includes a model-invoked `architecture-review` skill that combines durable capability contracts, deterministic source-shape checks, and advisory Fallow evidence.
-- [ ] The template includes an explicitly invoked `start-project` skill whose behavior is owned by `specs/project-start/spec.md`.
 - [ ] The template includes a narrowly routed `modern-web-guidance` skill with reviewed provenance, an adjacent Apache-2.0 license, valid UI metadata, a pinned CLI version, and telemetry-disabled commands.
 - [ ] The browser-support target and the Chromium-only verification boundary are explicit in durable architecture and agent guidance.
 - [ ] Modern Web Guidance adds no application dependency, vendored guide corpus, automatic update path, or CI gate.
@@ -125,7 +121,6 @@ Browser-facing implementation needs current web-platform and compatibility guida
 - **Wayfinder structure:** confirm the skill has valid `name` and `description` frontmatter plus valid `agents/openai.yaml`; use the skill-creator validator when its Python dependencies are available
 - **Specification and TDD structure:** apply the same metadata validation to `.codex/skills/to-spec/` and `.codex/skills/tdd/`
 - **Architecture review structure:** validate `.codex/skills/architecture-review/` metadata and confirm its workflow routes lasting outcomes into architecture docs, ADRs, or specs
-- **Project start structure:** validate `.codex/skills/start-project/` metadata and confirm its workflow is read-only until the exact pruning plan is approved
 - **Modern web structure:** validate `.codex/skills/modern-web-guidance/`, confirm its commands pin `modern-web-guidance@0.0.180` with `DISABLE_TELEMETRY=1`, confirm `@latest` is absent, and verify the recorded npm source commit and integrity against registry metadata
 - **README catalog:** confirm every `.codex/skills/*/SKILL.md` has a corresponding README link and that explicit-only workflows are identified
 

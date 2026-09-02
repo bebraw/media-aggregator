@@ -1,19 +1,24 @@
 # Architecture
 
-This file stores cross-cutting rules that apply to the whole repo and to projects cloned from it.
+This file stores cross-cutting rules for `media-aggregator`.
 
 Use this file for global constraints. Use feature specs under `specs/` for domain-specific behavior and contracts.
 
 ## Global Rules
 
-- Keep the template lightweight, reusable, easy to clone, and easy to prune.
-- Initialize a downstream clone through an approval-gated project-start pass: define one current closed product loop, classify inherited surfaces, preserve working seams, and record update provenance before pruning.
+- Keep the product lightweight, direct, and easy to change.
+- Preserve the working starter seam until the media aggregation loop replaces it with equivalent tests and verification.
+- Treat the configured source roster as the product's explicit coverage boundary. Global intent does not imply exhaustive geographic, publisher, or language coverage.
+- Prefer official feeds and documented APIs for headline ingestion. Full-article scraping requires a separate decision covering permission, reliability, data handling, and misuse resistance.
+- Preserve source attribution, canonical links, original-language metadata, and publication times through normalization and English translation.
+- Isolate translation behind a replaceable boundary so provider choice, credentials, cost controls, and language-quality evaluation do not leak into ingestion or rendering.
+- Use short-lived caching for the initial on-demand refresh loop. Adding durable storage, scheduled collection, or history requires a separate architecture decision.
+- Keep the interface brutalist and utilitarian: high contrast, visible structure, direct labels, compact hierarchy, and minimal decoration. Accessibility and rapid headline scanning remain non-negotiable.
 - Treat repo documentation as living context that should evolve with the code.
 - Treat architectural decisions as explicit records, not implicit tribal knowledge.
 - Treat specs and ADRs as the durable source of truth for expected behavior and architectural intent. Code, including AI-generated code, is only acceptable when it matches those documents or updates them intentionally in the same change set.
 - Add or update an ADR in `docs/adrs/` whenever a change introduces or changes a lasting architectural constraint, selects between credible architectural alternatives, or replaces an earlier decision. Keep drafts in `docs/adrs/proposed/`, approved-but-not-yet-implemented decisions in `docs/adrs/accepted/`, and implemented decisions in `docs/adrs/implemented/`.
 - Create or update the relevant feature spec in `specs/` in the same change set whenever feature behavior, contracts, workflows, or regression guardrails change.
-- Add or update a template update pack in `.template/updates/` in the same change set whenever a reusable template maintenance change should be portable to downstream projects.
 - Keep agent skill descriptions discriminating and entrypoints limited to project-specific decisions, invariants, exact local commands, and safety boundaries. Assume a capable `gpt-5.6-sol`-class baseline; retrieve version-sensitive manuals instead of vendoring command catalogs or teaching generic engineering judgment.
 - Keep optional multi-session discovery maps under `docs/wayfinding/<effort>.md`. Treat them as working context rather than durable authority, and promote lasting outcomes into `ARCHITECTURE.md`, ADRs, or feature specs.
 - Use focused red-green slices for observable runtime behavior and regression fixes when a stable test seam exists. When no meaningful failing test can be written, use and state the relevant deterministic verification instead.
@@ -52,21 +57,13 @@ Use this file for global constraints. Use feature specs under `specs/` for domai
 - `npm run diagnostics:codebase` is useful during review and refactoring, but passing or failing it is not a readiness baseline by itself.
 - Documentation-only changes should use the smallest relevant checks unless they alter executable instructions or workflow contracts.
 
-## Capability Kits
+## Upstream Template Updates
 
-- Put reusable partial-upgrade kits under `.capabilities/{capability-name}/`.
-- Keep capability kits instructional and reviewable rather than fully automated by default.
-- Each capability kit should include a README, a machine-readable manifest, any copyable files, package-manager recipes, and validation notes.
-- Capability kits should preserve target-project conventions unless the kit explicitly documents a required constraint.
-- Vendor third-party agent skills at a reviewed source revision, retain their license and source metadata, and adapt only where template compatibility requires it.
-
-## Template Updates
-
-- Put reusable maintenance update packs under `.template/updates/{update-id}/`.
-- Keep update packs as reviewable plain files with metadata, a migration guide, and a focused patch.
-- Use update packs for later changes to projects that already use this template or one of its capability kits.
-- Do not treat update packs as source snapshots; preserve downstream project conventions and use the migration guide when the patch does not apply cleanly.
-- When a downstream project prunes local update-pack history, record the template source, baseline Git revision, and applied update IDs in existing package metadata or durable documentation, and retain a discoverable sync entrypoint.
+- `package.json` owns the upstream template source, baseline revision, and applied-update record.
+- `.template/updates/AGENT_SYNC.md` is the discoverable sync entrypoint.
+- Treat retained update packs as reviewable upstream maintenance inputs, not as product source snapshots.
+- Apply only relevant, explicitly approved updates and preserve product conventions when a patch no longer applies cleanly.
+- Product changes do not author new update packs; reusable template maintenance remains owned by the upstream `vibe-template` project.
 
 ## Spec Conventions
 

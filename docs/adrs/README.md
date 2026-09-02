@@ -36,7 +36,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-001](./implemented/ADR-001-use-architecture-decision-records.md)                  | Accepted    | Use ADRs to capture significant architectural decisions in this repo.                             |
 | [ADR-002](./implemented/ADR-002-make-architectural-decisions-explicit.md)              | Accepted    | Require explicit ADR updates for lasting architectural decisions.                                 |
 | [ADR-003](./implemented/ADR-003-require-spec-updates-and-high-coverage.md)             | Accepted    | Treat completed feature work as spec work and gate `src/` code on high unit coverage.             |
-| [ADR-004](./implemented/ADR-004-ship-a-worker-stub.md)                                 | Accepted    | Ship a minimal Worker stub so the template is runnable and testable.                              |
+| [ADR-004](./implemented/ADR-004-ship-a-worker-stub.md)                                 | Superseded  | Formerly defined the starter Worker; the product surface is now governed by ADR-055.              |
 | [ADR-005](./implemented/ADR-005-separate-worker-views-and-api.md)                      | Accepted    | Separate the Worker starter into `src/api` and `src/views` for easier evolution.                  |
 | [ADR-006](./implemented/ADR-006-adopt-tailwind-for-starter-ui.md)                      | Accepted    | Adopt the thesis-journey-tracker Tailwind v4 pipeline for the starter Worker UI.                  |
 | [ADR-007](./implemented/ADR-007-avoid-screenshot-tooling-in-the-template.md)           | Superseded  | Avoid screenshot capture and screenshot automation in the template baseline.                      |
@@ -50,7 +50,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-015](./implemented/ADR-015-relax-npm-version-enforcement.md)                      | Accepted    | Keep npm as the required package manager while relaxing exact npm patch enforcement.              |
 | [ADR-016](./implemented/ADR-016-allow-lightweight-local-readme-screenshot-tooling.md)  | Superseded  | Allowed a lightweight local script for refreshing the committed README screenshot.                |
 | [ADR-017](./implemented/ADR-017-prune-redundant-package-scripts.md)                    | Accepted    | Keep one canonical package script per normal workflow and remove redundant aliases.               |
-| [ADR-018](./implemented/ADR-018-add-capability-kits.md)                                | Accepted    | Add lightweight capability kits for applying specific template practices to existing repos.       |
+| [ADR-018](./implemented/ADR-018-add-capability-kits.md)                                | Superseded  | Formerly provided capability kits; superseded for this downstream product by ADR-055.             |
 | [ADR-019](./implemented/ADR-019-tighten-agent-workflow-guardrails.md)                  | Accepted    | Tighten TypeScript, write-target, and readiness-validation guardrails for agent work.             |
 | [ADR-020](./implemented/ADR-020-keep-readme-screenshot-refresh-manual.md)              | Accepted    | Keep README screenshot refresh manual and outside the automated development loop.                 |
 | [ADR-021](./implemented/ADR-021-add-accepted-adr-state.md)                             | Accepted    | Add an accepted ADR state so implemented means the decision is actually reflected in the repo.    |
@@ -87,6 +87,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-052](./implemented/ADR-052-adopt-scoped-modern-web-guidance.md)                   | Implemented | Add pinned, telemetry-disabled web-platform guidance with explicit browser-support boundaries.    |
 | [ADR-053](./implemented/ADR-053-adopt-local-ci-canonical-interface.md)                 | Implemented | Use Local CI's canonical package, executable, configuration, and agent-skill names.               |
 | [ADR-054](./implemented/ADR-054-target-a-compact-agent-skill-baseline.md)              | Implemented | Target capable agents with compact, retrieval-first skills and remove overlapping or unused ones. |
+| [ADR-055](./implemented/ADR-055-initialize-media-aggregator.md)                        | Implemented | Initialize the media aggregator while retaining the verified Cloudflare Worker baseline.          |
 
 ## Creating A New ADR
 

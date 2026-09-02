@@ -1,6 +1,6 @@
 # ADR-004: Ship a Worker Stub
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-055](./ADR-055-initialize-media-aggregator.md)
 
 **Date:** 2026-03-28
 

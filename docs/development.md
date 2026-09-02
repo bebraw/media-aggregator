@@ -1,21 +1,21 @@
 # Development
 
-This document collects development-facing setup and workflow notes for the template.
+This document collects development-facing setup and workflow notes for `media-aggregator`.
 
 ## Agent Context
 
-The template vendors the ASDLC knowledge base in `.asdlc/`.
+The project vendors the ASDLC knowledge base in `.asdlc/`.
 
 - Start with `.asdlc/SKILL.md` for ASDLC concepts, patterns, and practices.
 - Use `AGENTS.md` as the Codex-native context anchor for this repo.
 
 ## Local CI
 
-This template is set up for the Local CI runner.
+This project is set up for the Local CI runner.
 
 ### Prerequisites
 
-- Local development in this template targets macOS. The documented commands assume a macOS shell environment and are not maintained as a cross-platform baseline.
+- Local development targets macOS. The documented commands assume a macOS shell environment and are not maintained as a cross-platform baseline.
 - Run `nvm use` before `npm install` or any other development command so your shell uses the Node.js version mirrored in `.nvmrc`, which also keeps the bundled npm release inside the repo's supported npm 11 range.
 - Install dependencies with `npm install`.
 - `npm install` also configures the repo-managed Git hook path and enables the `pre-push` hook that runs affected-file guardrails.
@@ -76,15 +76,15 @@ Use targeted checks while iterating, then run the checks that match the change b
 
 Workflow-sensitive changes include GitHub Actions workflows, package metadata or dependency installation, build or container setup, and browser CI setup. Ordinary source, test, and tooling changes that stay outside those boundaries do not require Local CI. Documentation-only changes should use the smallest relevant checks unless they alter executable instructions or workflow contracts.
 
-The template now ships with a minimal Worker stub in `src/worker.ts`. `npm run dev` starts it on `http://127.0.0.1:8787`, and Playwright uses `npm run e2e:server` on `http://127.0.0.1:8788` so browser tests can run without extra setup. The e2e server forces Chokidar polling mode to avoid file-watcher exhaustion in macOS-hosted local runs while preserving the normal `npm run dev` developer loop. API modules live under `src/api/`, view modules live under `src/views/`, and tests are colocated under `src/`.
+The project runs a server-rendered Worker from `src/worker.ts`. `npm run dev` starts it on `http://127.0.0.1:8787`, and Playwright uses `npm run e2e:server` on `http://127.0.0.1:8788` so browser tests can run without extra setup. The e2e server forces Chokidar polling mode to avoid file-watcher exhaustion in macOS-hosted local runs while preserving the normal `npm run dev` developer loop. News-domain modules live under `src/news/`, API modules under `src/api/`, view modules under `src/views/`, and tests are colocated under `src/`.
 
 The GitHub Actions CI workflow splits fast checks, browser checks, and mutation checks into separate jobs, reads the pinned Node version from `package.json`, relies on the npm release bundled with that Node setup as long as it satisfies the repo's npm 11 constraint, runs repository-shape validation as part of the fast job, runs the browser job in the version-pinned Playwright container image `mcr.microsoft.com/playwright:v1.62.1-noble`, pins every `uses:` action reference to a full commit SHA, and cancels superseded runs on the same ref. The browser and mutation jobs use `scripts/classify-expensive-ci.mjs` after checkout and skip cache restoration, Node setup, dependency installation, and gate execution when every changed file is in a known non-runtime area such as docs, specs, template update packs, or agent skill material. Unknown paths, missing commit ranges, and classifier failures take the safe path and run the expensive gates. The full `quality-mutation` workflow job is reserved for GitHub Actions with a `github.server_url` guard, so Local CI runs skip it; use `npm run quality:gate:deep` or `npm run mutation` when local mutation feedback is needed. Dependency installation uses plain `npm ci`; Local CI explicitly prewarms through the fast job's stable `install` step, then gives parallel jobs isolated writable `node_modules` views. This prevents cross-job cache races while avoiding duplicate cold installs, unnecessary npm self-upgrades in CI, and mutable action tags.
 
-The starter UI now follows the same Tailwind v4 baseline shape as `thesis-journey-tracker`: Tailwind input lives in `src/tailwind-input.css`, generated CSS is written to `.generated/styles.css`, and Wrangler runs `npm run build:css` automatically before local development.
+The current UI uses Tailwind v4: Tailwind input lives in `src/tailwind-input.css`, generated CSS is written to `.generated/styles.css`, and Wrangler runs `npm run build:css` automatically before local development.
 
 The Lighthouse setup is also generic, but the Worker stub gives it a concrete local target. Use `LIGHTHOUSE_URL=http://127.0.0.1:8787 LIGHTHOUSE_SERVER_COMMAND="npm run dev" npm run lighthouse`. Reports cover performance, accessibility, best practices, and SEO in mobile and desktop modes and are written to `reports/lighthouse/`. Configure the performance floor with `LIGHTHOUSE_MIN_PERFORMANCE_SCORE` and the other category floors with `LIGHTHOUSE_MIN_QUALITY_SCORE`.
 
-The Vitest setup is generic as well. `vitest.config.ts` targets colocated `src/**/*.test.ts` files while excluding `src/**/*.e2e.ts`. The default `npm test` command uses `--passWithNoTests` so the template remains usable before a project adds its first test file.
+The Vitest setup targets colocated `src/**/*.test.ts` files while excluding `src/**/*.e2e.ts`. The default `npm test` command uses `--passWithNoTests`.
 
 The coverage gate is stricter than the basic test run. `npm run test:coverage` measures runtime `src/**` code with the V8 provider, writes reports to `reports/coverage/`, and enforces high thresholds once a project actually has `src/` code. Colocated unit tests, end-to-end tests, and test-support files do not count as source files for the gate's skip-or-fail logic. `npm run test:affected` runs Vitest related tests for affected runtime files and directly runs affected unit test files. It falls back to `npm run test:coverage` when affected files include test environment inputs or when affected runtime files have no related tests.
 
@@ -106,9 +106,9 @@ Fallow provides advisory codebase readability diagnostics. `npm run diagnostics:
 
 The project Fallow config ignores `typescript-7` because the typecheck script executes that aliased compiler directly from `node_modules` rather than importing it, and ignores the Stryker API package referenced only through tooling JSDoc types.
 
-The README includes a committed application screenshot at `docs/screenshots/home.png`. Refresh that asset manually when the starter UI changes materially, but keep screenshot capture out of the automated development loop, CI, and remote workflows.
+The README includes a committed application screenshot at `docs/screenshots/home.png`. Refresh it manually when the product UI changes materially, and keep screenshot capture out of the automated development loop, CI, and remote workflows.
 
-Template update packs live under `.template/updates/`. Use them to port later template maintenance changes into projects that already use this template or one of its capability kits. Each pack has metadata, a migration guide, and a focused patch to try first; when the patch does not apply cleanly, use the guide to adapt the change to the target project's conventions.
+Retained upstream update packs live under `.template/updates/`. Use `.template/updates/AGENT_SYNC.md` and the `vibeTemplate` metadata in `package.json` to review relevant maintenance changes. Apply only explicitly approved updates and adapt them to product conventions when a patch no longer applies cleanly.
 
 ## Write Boundaries
 
@@ -118,7 +118,7 @@ When adding a new tool or workflow that writes files, document the target path i
 
 ## Security Baseline
 
-The template keeps secret handling lightweight and explicit:
+The project keeps secret handling lightweight and explicit:
 
 - Keep local secrets in untracked files such as `.dev.vars`.
 - Commit example files such as `.dev.vars.example` with placeholder values only.

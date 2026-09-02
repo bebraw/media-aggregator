@@ -1,12 +1,26 @@
-# vibe-template
+# media-aggregator
 
-`vibe-template` currently ships as a Cloudflare Worker application served with Wrangler, implemented in JavaScript/TypeScript, and centered on server-rendered HTML with a small JSON API stub.
+`media-aggregator` is a personal dashboard for tracking major headlines from reputable news organizations around the world. It will collect headline metadata from a curated source roster, translate non-English headlines into English, and link directly to the original reporting.
 
-This is a template for my vibecoding projects and it captures what I consider my best practices so I don't have to repeat them for each experiment.
+The first product loop is deliberately narrow: open the dashboard, refresh current headlines, scan one global view, and follow a headline to its publisher. Full articles, recommendations, summaries, accounts, alerts, and historical search are deferred.
 
-The repo vendors ASDLC reference material in `.asdlc/` as local guidance instead of recreating it per project. Repo-specific truth lives in `ARCHITECTURE.md`, `specs/`, and `docs/adrs/`: generated code still needs to match those documents, and passing CI alone is not enough.
+The application runs as a server-rendered Cloudflare Worker. The current interface is a real, filterable product preview built from clearly labeled synthetic headlines; live feed ingestion and translation are the next boundary.
 
-Local development in this repo targets macOS. Other platforms may need script and tooling adjustments before the baseline workflow works as documented.
+## Product Direction
+
+- Cover a geographically balanced roster rather than one national news market.
+- Support any language represented by configured sources and translate non-English headline metadata into English.
+- Prefer official feeds and documented APIs; do not copy full article bodies.
+- Show the publisher, original language, publication time, and canonical article link.
+- Start local-first and without authentication, persistence, scheduled collection, or public multi-user access.
+
+## Interface Direction
+
+The product UI is brutalist and utilitarian: high contrast, exposed structure, dense information hierarchy, direct labels, and minimal decoration. Legibility, scanning speed, source attribution, and failure visibility take priority over ornamental polish.
+
+The repo vendors ASDLC reference material in `.asdlc/` as local guidance. Project truth lives in `ARCHITECTURE.md`, `specs/`, and `docs/adrs/`: generated code must match those documents, and passing CI alone is not enough.
+
+Local development targets macOS. Other platforms may need script and tooling adjustments before the baseline workflow works as documented.
 
 ## Documentation
 
@@ -15,18 +29,16 @@ Local development in this repo targets macOS. Other platforms may need script an
 - Feature and architecture specs: `specs/README.md`
 - Agent behavior and project rules: `AGENTS.md`
 - Project-local agent capabilities: `.codex/skills/`
-- Partial-upgrade capability kits: `.capabilities/`
-- Template maintenance update packs: `.template/updates/`
+- Upstream template maintenance path: `.template/updates/AGENT_SYNC.md`
 
 ## Agent Skills
 
 The repository includes compact instructions under `.codex/skills/` that help capable coding agents follow project-specific conventions without repeating generic engineering guidance. Version-sensitive details come from current primary sources. You can describe the job normally and let the agent select a matching skill, or require one by name—for example, `Use $security to review this authentication change`.
 
-`$start-project`, `$wayfinder`, and `$to-spec` are intentionally explicit: the agent uses them only when you name them. This keeps repository pruning, exploratory maps, and durable specifications from appearing as accidental side effects.
+`$wayfinder` and `$to-spec` are intentionally explicit: the agent uses them only when you name them. This keeps exploratory maps and durable specifications from appearing as accidental side effects.
 
 ### From Idea to Implementation
 
-- [`$start-project`](.codex/skills/start-project/SKILL.md) — define a fresh clone's first closed product loop, audit inherited template material, and present an approval-gated pruning plan before changing files. Explicit invocation required.
 - [`$brainstorming`](.codex/skills/brainstorming/SKILL.md) — compare lightweight approaches and clarify trade-offs before committing to a design.
 - [`$wayfinder`](.codex/skills/wayfinder/SKILL.md) — map a large, uncertain, multi-session initiative in `docs/wayfinding/` when it is not ready for a responsible spec. Explicit invocation required.
 - [`$to-spec`](.codex/skills/to-spec/SKILL.md) — turn settled discussion or wayfinding results into the repository's living `specs/<feature-domain>/spec.md`. Explicit invocation required.
@@ -44,8 +56,8 @@ The repository includes compact instructions under `.codex/skills/` that help ca
 
 ### Frontend and Performance
 
-- [`$frontend-design`](.codex/skills/frontend-design/SKILL.md) — design or substantially revise production-quality UI while preserving the starter's reusable nature.
-- [`$minimal-visual-style`](.codex/skills/minimal-visual-style/SKILL.md) — extend the existing minimal, editorial, token-driven visual language.
+- [`$frontend-design`](.codex/skills/frontend-design/SKILL.md) — design or substantially revise production-quality UI while preserving the project's lightweight shape.
+- [`$minimal-visual-style`](.codex/skills/minimal-visual-style/SKILL.md) — extend the product's brutalist, utilitarian visual language without diluting its information hierarchy.
 - [`$modern-web-guidance`](.codex/skills/modern-web-guidance/SKILL.md) — retrieve pinned, telemetry-disabled, Baseline-aware implementation guidance for substantive browser-platform work.
 - [`$web-perf`](.codex/skills/web-perf/SKILL.md) — measure Core Web Vitals, loading behavior, interaction responsiveness, and network costs.
 
@@ -66,7 +78,7 @@ Each linked `SKILL.md` is the source of truth for boundaries and workflow detail
 - npm is constrained to the supported npm 11 range in `package.json`; local development is expected to use `nvm use`, and CI uses the npm release bundled with the pinned Node setup as long as it satisfies that range.
 - Copy `.dev.vars.example` to `.dev.vars` before running projects that need local secrets.
 - Use repo-pinned CLI tools through `npx`, including `npx wrangler` for Cloudflare-based experiments.
-- Start the stub Worker with `npm run dev`, then open `http://127.0.0.1:8787`.
+- Start the Worker with `npm run dev`, then open `http://127.0.0.1:8787`.
 - Rebuild the generated Tailwind stylesheet manually with `npm run build:css` when needed.
 
 ## Verification
@@ -84,46 +96,31 @@ Each linked `SKILL.md` is the source of truth for boundaries and workflow detail
 - Run browser tests from colocated `src/**/*.e2e.ts` files with `npm run e2e`.
 - Run mutation tests against runtime `src/**/*.ts` files with `npm run mutation`.
 
-## Capability Kits
+## Upstream Template Updates
 
-Use `.capabilities/` when another project needs one template practice without adopting the whole starter. Each kit is a reviewable partial-upgrade guide with a README, manifest, package-manager recipe, copyable files, and validation checks.
-
-The `engineering-quality-skills` kit exposes focused correctness review, test review, and systematic debugging workflows to downstream coding agents without adding runtime dependencies.
-
-To apply a kit to another repo:
-
-1. Pick the smallest matching kit from `.capabilities/README.md`.
-2. Read the kit README and `manifest.json`.
-3. Follow the target package-manager recipe under `recipes/`.
-4. Copy or merge files from `files/` without overwriting target-project conventions.
-5. Ask before applying optional adjacent setup such as creating a GitHub Actions workflow.
-6. Run the kit checks and the target repo's normal quality gate.
-
-For existing projects where the right kit set is unclear, start with the negotiation prompt in `.capabilities/README.md`. It asks an agent to inspect the target repo, present a checkbox-style capability pull plan, and wait for approval before editing files.
-
-## Template Update Packs
-
-Use `.template/updates/` to sync later maintenance changes into projects that already use this template or one of its capability kits. Each update pack has metadata, a short migration guide, and a focused patch to try before porting the change manually.
+The repository records its `vibe-template` source and baseline in `package.json`. Use `.template/updates/AGENT_SYNC.md` to review relevant upstream maintenance without merging unrelated starter structure.
 
 For cross-repo agent work, tell the agent:
 
-> Look at `vibe-template/.template/updates/AGENT_SYNC.md` for latest template updates.
+> Look at `.template/updates/AGENT_SYNC.md` and the recorded `vibeTemplate` metadata for relevant upstream updates.
 
-## Starter App
+## Current Product Preview
 
-- `GET /` serves a minimal editorial Worker stub with a route index and a primary health-probe link.
+- `GET /` serves six synthetic multilingual headlines in the intended product interface.
+- `GET /?region=<region>` filters the preview by geographic region.
 - `GET /styles.css` serves the generated Tailwind stylesheet.
 - `GET /api/health` serves a JSON health response for smoke tests and tooling.
 
 ## Source Layout
 
 - `src/worker.ts` is the Worker entry point and top-level router.
+- `src/news/` owns normalized preview headline records and region selection.
 - `src/api/` holds API response modules such as the health endpoint.
-- `src/views/` holds HTML rendering modules for the starter UI.
+- `src/views/` holds server-rendered HTML modules.
 - Tests live next to the code they exercise under `src/`.
 
 ## Application Screenshot
 
-![Starter app screenshot](docs/screenshots/home.png)
+![Current application screenshot](docs/screenshots/home.png)
 
-Refresh this asset manually when the starter UI changes materially.
+Refresh this asset manually when the product interface changes materially.

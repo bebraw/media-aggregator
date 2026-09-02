@@ -1,4 +1,4 @@
-> **Project:** `vibe-template` is a lightweight starter for AI-assisted experiments and small software projects. Keep setup reusable, easy to clone, and easy to prune.
+> **Project:** `media-aggregator` is a personal, global news-headline dashboard. Keep it direct, dependable, and intentionally small.
 >
 > **Platform Baseline:** Local development and local CI in this repo target macOS. Treat other platforms as out of scope unless the user explicitly asks to broaden support.
 >
@@ -32,7 +32,6 @@
 - Consult `.asdlc/SKILL.md` before giving ASDLC-specific guidance.
 - Prefer small, reviewable changes that preserve the template nature of the repo.
 - Document reusable conventions instead of one-off preferences.
-- Add or update a template update pack in `.template/updates/` when a reusable template maintenance change should be portable to downstream projects.
 - Treat every lasting architectural decision as explicit documentation work, not implied context.
 - Add or update an ADR in `docs/adrs/` in the same change set whenever a decision introduces or changes a lasting architectural constraint, selects between credible alternatives, or supersedes an earlier architecture decision. Keep drafts in `docs/adrs/proposed/`, approved-but-not-yet-implemented decisions in `docs/adrs/accepted/`, and implemented decisions in `docs/adrs/implemented/`.
 - Record global architecture rules in `ARCHITECTURE.md` and feature-level contracts in `specs/{feature-domain}/spec.md`.
@@ -46,6 +45,10 @@
 - Use `npm run quality:affected` for affected-file guardrails while iterating or before push when a full fast gate would do avoidable work.
 - Treat `npm run typecheck` as part of the baseline gate whenever TypeScript files or typed tooling config are involved.
 - Treat high automated test coverage as part of done work for `src/` code. The baseline gate should fail when `src/` code exists without matching unit coverage.
+- Treat the configured source roster as an explicit editorial boundary. Do not claim comprehensive geographic or language coverage from a limited roster.
+- Prefer official feeds and documented APIs for headline ingestion. Do not add full-article scraping without a separate legal, reliability, and security decision.
+- Preserve the original source, language, publication time, and canonical link when translating headline metadata into English.
+- Keep the product UI brutalist and utilitarian: high contrast, visible structure, dense information hierarchy, direct labels, and minimal decoration.
 - Keep new workflow write targets explicit and documented instead of adding ad hoc file writes.
 - Use targeted checks while iterating, then run `npm run quality:gate` before treating a non-documentation change as ready.
 - Run `npm run ci:local` for workflow-sensitive changes and explicit full PR or release readiness checks. Ordinary source, test, and tooling changes that do not cross those boundaries do not require Local CI.
@@ -87,12 +90,6 @@
 
 - Use the project-local [`brainstorming`](./.codex/skills/brainstorming/SKILL.md) skill when the user is exploring options, shaping a feature, or comparing approaches before implementation.
 - Treat the skill as guidance for producing concrete, lightweight options that can turn cleanly into specs, ADRs, or code.
-
-## Project Start
-
-- Use the project-local [`start-project`](./.codex/skills/start-project/SKILL.md) skill only when the user explicitly asks to initialize, personalize, or prune a project cloned from this template.
-- Require a read-only Project Start Plan that defines the current closed product loop and lists exact keep, replace-later, removal, decision, documentation, update-path, and verification items.
-- Do not edit or delete files until the user approves that plan; preserve the template source and baseline before pruning local update history.
 
 ## Wayfinding
 
