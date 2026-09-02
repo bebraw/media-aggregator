@@ -71,6 +71,7 @@ async function loadSource(
     const items = parseFeed(await fetchFeed(source.feedUrl))
       .map((item) => ({ ...item, url: normalizePublisherUrl(item.url, source.articleHosts) }))
       .filter((item): item is typeof item & { url: string } => item.url !== null)
+      .filter(uniqueByCanonicalUrl())
       .slice(0, limit);
 
     if (items.length === 0) throw new Error("No valid headlines returned");
@@ -110,6 +111,15 @@ async function loadSource(
       },
     };
   }
+}
+
+function uniqueByCanonicalUrl(): (item: { url: string }) => boolean {
+  const seenUrls = new Set<string>();
+  return (item) => {
+    if (seenUrls.has(item.url)) return false;
+    seenUrls.add(item.url);
+    return true;
+  };
 }
 
 function normalizePublisherUrl(value: string, allowedHosts: readonly string[]): string | null {

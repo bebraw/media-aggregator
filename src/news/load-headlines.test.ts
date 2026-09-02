@@ -79,4 +79,29 @@ describe("loadHeadlines", () => {
     expect(snapshot.headlines).toHaveLength(0);
     expect(snapshot.sources[0]).toMatchObject({ state: "error", headlineCount: 0 });
   });
+
+  it("collapses repeated canonical URLs before applying the source limit", async () => {
+    const translator: Translator = {
+      translate: vi.fn(async (text) => `English: ${text}`),
+    };
+    const snapshot = await loadHeadlines({
+      sources: [sources[1]!],
+      fetchFeed: async () => `<rss><channel>
+        <item><title>🔴 Breaking title</title><link>https://french.example/story-one</link><pubDate>2026-09-02T08:36:00Z</pubDate></item>
+        <item><title>Updated title</title><link>https://french.example/story-one</link><pubDate>2026-09-02T08:35:00Z</pubDate></item>
+        <item><title>Another story</title><link>https://french.example/story-two</link><pubDate>2026-09-02T08:00:00Z</pubDate></item>
+      </channel></rss>`,
+      translator,
+      now: () => new Date("2026-09-02T09:00:00Z"),
+      itemsPerSource: 2,
+    });
+
+    expect(snapshot.headlines.map((headline) => headline.originalHeadline)).toEqual(["🔴 Breaking title", "Another story"]);
+    expect(snapshot.headlines.map((headline) => headline.url)).toEqual([
+      "https://french.example/story-one",
+      "https://french.example/story-two",
+    ]);
+    expect(translator.translate).toHaveBeenCalledTimes(2);
+    expect(snapshot.sources[0]).toMatchObject({ state: "live", headlineCount: 2 });
+  });
 });

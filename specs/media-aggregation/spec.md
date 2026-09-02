@@ -78,6 +78,9 @@ and can incur Workers AI usage.
 - Treat inclusion as a curated product choice, not an objective trust score.
 - Preserve publisher name, canonical article URL, original language,
   publication time when available, original headline, and translated headline.
+- Collapse repeated entries with the same canonical article URL before applying
+  a source's headline limit, retaining the first and therefore freshest feed
+  entry.
 - Link to the publisher instead of copying full article bodies.
 - Default ordering should be direct and explainable, such as reverse
   chronological order, rather than a hidden relevance model.
@@ -144,6 +147,8 @@ and can incur Workers AI usage.
 - Missing publication times must remain distinguishable from known times.
 - Cached responses must expose their retrieval time.
 - Publisher failures must remain isolated.
+- A publisher repeating one canonical article URL must produce one headline and
+  must not displace the next unique story from that source's limit.
 - Headline links must resolve to publisher-controlled canonical URLs.
 - Full article bodies must not enter application storage or rendered output.
 
