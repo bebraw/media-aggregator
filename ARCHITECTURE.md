@@ -35,6 +35,9 @@ Use this file for global constraints. Use feature specs under `specs/` for domai
 - For every new or materially expanded independently evolvable capability, record its source root, composition root, state authority, public contracts, and dependency direction in the relevant feature spec.
 - Treat `.architecture-check.json` limits as generous smoke alarms for architectural review. Do not split code mechanically to satisfy them; consolidate responsibilities or add an exact rationale-bearing exception.
 - Keep the quality gate green before considering a change ready.
+- Deploy the production Worker through Cloudflare Workers Builds after a
+  successful build of the `main` branch. Keep GitHub Actions responsible for
+  verification rather than production deployment.
 - Keep workflow writes explicit. New generated output, local state, cache, archive, or tool-artifact paths should be documented in the same change that introduces them.
 - Do not place executable browser code inline in Worker-rendered HTML. Client behavior should live in typed TypeScript modules before it is served to browsers.
 

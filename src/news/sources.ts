@@ -2,6 +2,26 @@ import { type NewsSource } from "./load-headlines";
 
 export const newsSources: readonly NewsSource[] = [
   {
+    id: "africanews-en",
+    name: "Africanews",
+    region: "Africa",
+    language: "English",
+    languageCode: "EN",
+    translationCode: "en",
+    feedUrl: "https://www.africanews.com/feed/rss",
+    articleHosts: ["www.africanews.com"],
+  },
+  {
+    id: "cbc-top-stories",
+    name: "CBC News",
+    region: "Americas",
+    language: "English",
+    languageCode: "EN",
+    translationCode: "en",
+    feedUrl: "https://www.cbc.ca/webfeed/rss/rss-topstories",
+    articleHosts: ["www.cbc.ca"],
+  },
+  {
     id: "bbc-world",
     name: "BBC News",
     region: "Europe",
@@ -30,5 +50,25 @@ export const newsSources: readonly NewsSource[] = [
     translationCode: "ja",
     feedUrl: "https://www3.nhk.or.jp/rss/news/cat0.xml",
     articleHosts: ["www3.nhk.or.jp"],
+  },
+  {
+    id: "al-jazeera-en",
+    name: "Al Jazeera",
+    region: "Middle East",
+    language: "English",
+    languageCode: "EN",
+    translationCode: "en",
+    feedUrl: "https://www.aljazeera.com/xml/rss/all.xml",
+    articleHosts: ["www.aljazeera.com"],
+  },
+  {
+    id: "the-hindu-national",
+    name: "The Hindu",
+    region: "South Asia",
+    language: "English",
+    languageCode: "EN",
+    translationCode: "en",
+    feedUrl: "https://www.thehindu.com/news/national/feeder/default.rss",
+    articleHosts: ["www.thehindu.com"],
   },
 ] as const;

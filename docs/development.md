@@ -30,6 +30,14 @@ This project is set up for the Local CI runner.
 
 The repo pins CLI tooling in `devDependencies`, including Wrangler for Cloudflare-based experiments. Prefer invoking those tools through `npx` or repo scripts so the project version is used instead of a global install.
 
+## Production Deployment
+
+Cloudflare Workers Builds connects `bebraw/media-aggregator` to the production
+`media-aggregator` Worker. A push to `main` runs `npm run build:css` and then
+`npx wrangler deploy`. Builds for non-production branches are disabled. GitHub
+Actions continues to run verification; use `npm run deploy` only when a manual
+fallback deployment is necessary.
+
 If local CI fails with `No such image: ghcr.io/actions/actions-runner:latest`, pull that image manually and re-run the workflow.
 
 If Local CI warns with `No such remote 'origin'`, add `GITHUB_REPO=owner/repo` to `.env.local-ci` and rerun the workflow.

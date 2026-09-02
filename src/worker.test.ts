@@ -87,7 +87,15 @@ describe("worker", () => {
           ? { title: "English title", url: "https://www.bbc.com/news/one" }
           : input.includes("france24")
             ? { title: "Titre français", url: "https://www.france24.com/fr/one" }
-            : { title: "日本語の見出し", url: "https://www3.nhk.or.jp/news/one" };
+            : input.includes("nhk")
+              ? { title: "日本語の見出し", url: "https://www3.nhk.or.jp/news/one" }
+              : input.includes("africanews")
+                ? { title: "Africa title", url: "https://www.africanews.com/one" }
+                : input.includes("cbc")
+                  ? { title: "Americas title", url: "https://www.cbc.ca/news/one" }
+                  : input.includes("aljazeera")
+                    ? { title: "Middle East title", url: "https://www.aljazeera.com/news/one" }
+                    : { title: "South Asia title", url: "https://www.thehindu.com/news/one" };
         return new Response(
           `<rss><channel><item><title>${source.title}</title><link>${source.url}</link><pubDate>2026-09-02T08:00:00Z</pubDate></item></channel></rss>`,
         );
@@ -100,6 +108,7 @@ describe("worker", () => {
     const body = await response.text();
 
     expect(body).toContain("LIVE DATA");
+    expect(body).toContain("7 / 7");
     expect(body).toContain("English title");
     expect(body).toContain("Translated title");
     expect(put).toHaveBeenCalledOnce();

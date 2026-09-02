@@ -57,9 +57,12 @@ and can incur Workers AI usage.
 
 ### Current Live Slice
 
-- The explicit roster contains BBC News in English, France 24 in French, and
-  NHK News in Japanese. This is a working ingestion slice, not representative
-  global coverage.
+- The explicit roster contains Africanews, CBC News, BBC News, France 24, NHK
+  News, Al Jazeera, and The Hindu. At least one publisher is configured for
+  every visible region filter, while the roster remains a small working slice
+  rather than representative global coverage.
+- A headline's region identifies the configured publisher's home region, not
+  the geographic subject of the article.
 - Feed responses are time- and size-bounded. Article URLs must use HTTPS and
   match the configured publisher host allowlist.
 - Workers AI translates French and Japanese headline text to English while the
@@ -67,6 +70,8 @@ and can incur Workers AI usage.
 - A normalized snapshot is cached for five minutes. `?refresh=1` bypasses the
   read path for a manual refresh, and `?preview=1` retains the deterministic
   synthetic interface.
+- Cloudflare Workers Builds deploys the production Worker after pushes to
+  `main`, using `npm run build:css` followed by `npx wrangler deploy`.
 - Fetch or translation failures remove only that source's records and appear in
   the page's partial-coverage block.
 
@@ -143,6 +148,7 @@ and can incur Workers AI usage.
 ### Regression Guardrails
 
 - Source roster changes must be reviewable and must not overstate coverage.
+- Every visible region filter must have at least one configured publisher.
 - Translation must never overwrite the original headline in the domain record.
 - Missing publication times must remain distinguishable from known times.
 - Cached responses must expose their retrieval time.
