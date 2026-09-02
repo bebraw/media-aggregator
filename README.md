@@ -4,7 +4,7 @@
 
 The first product loop is deliberately narrow: open the dashboard, refresh current headlines, scan one global view, and follow a headline to its publisher. Full articles, recommendations, summaries, accounts, alerts, and historical search are deferred.
 
-The application runs as a server-rendered Cloudflare Worker. The current interface is a real, filterable product preview built from clearly labeled synthetic headlines; live feed ingestion and translation are the next boundary.
+The application runs as a server-rendered Cloudflare Worker. The default dashboard now loads a bounded live slice from BBC News, France 24, and NHK News, translates French and Japanese headline text to English with Workers AI, and visibly isolates upstream failures. The source roster is deliberately small and is not yet representative global coverage.
 
 ## Product Direction
 
@@ -79,6 +79,9 @@ Each linked `SKILL.md` is the source of truth for boundaries and workflow detail
 - Copy `.dev.vars.example` to `.dev.vars` before running projects that need local secrets.
 - Use repo-pinned CLI tools through `npx`, including `npx wrangler` for Cloudflare-based experiments.
 - Start the Worker with `npm run dev`, then open `http://127.0.0.1:8787`.
+- Live translation uses the authenticated Cloudflare account, always runs
+  remotely, and can incur Workers AI usage. Run `npx wrangler login` first if
+  the CLI is not authenticated.
 - Rebuild the generated Tailwind stylesheet manually with `npm run build:css` when needed.
 
 ## Verification
@@ -104,17 +107,20 @@ For cross-repo agent work, tell the agent:
 
 > Look at `.template/updates/AGENT_SYNC.md` and the recorded `vibeTemplate` metadata for relevant upstream updates.
 
-## Current Product Preview
+## Current Product Slice
 
-- `GET /` serves six synthetic multilingual headlines in the intended product interface.
-- `GET /?region=<region>` filters the preview by geographic region.
+- `GET /` retrieves and caches up to two current headlines per configured publisher.
+- `GET /?region=<region>` filters the live snapshot by publisher region.
+- `GET /?refresh=1` bypasses the five-minute snapshot read cache.
+- `GET /?preview=1` serves the six deterministic synthetic interface fixtures.
 - `GET /styles.css` serves the generated Tailwind stylesheet.
 - `GET /api/health` serves a JSON health response for smoke tests and tooling.
 
 ## Source Layout
 
 - `src/worker.ts` is the Worker entry point and top-level router.
-- `src/news/` owns normalized preview headline records and region selection.
+- `src/news/` owns source configuration, bounded retrieval, normalization,
+  translation, caching, preview fixtures, and region selection.
 - `src/api/` holds API response modules such as the health endpoint.
 - `src/views/` holds server-rendered HTML modules.
 - Tests live next to the code they exercise under `src/`.

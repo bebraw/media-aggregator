@@ -4,6 +4,16 @@ This file stores cross-cutting rules for `media-aggregator`.
 
 Use this file for global constraints. Use feature specs under `specs/` for domain-specific behavior and contracts.
 
+- `src/news/` owns publisher configuration, bounded feed retrieval,
+  normalization, translation, and snapshot caching.
+- `src/worker.ts` is the composition root; source and translation modules must
+  not depend on presentation code.
+- Publisher content is untrusted input. Only bounded feeds from configured
+  HTTPS endpoints and article URLs on per-publisher host allowlists may enter
+  normalized records.
+- Translation is a derived value. It must never replace the publisher's
+  original headline or canonical link.
+
 ## Global Rules
 
 - Keep the product lightweight, direct, and easy to change.

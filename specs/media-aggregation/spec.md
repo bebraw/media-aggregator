@@ -36,10 +36,11 @@ The configured source roster remains the honest coverage boundary.
 - **Access boundary:** local personal use until public access and authentication
   are decided explicitly
 
-The translation provider is intentionally unresolved during initialization.
-Implementation must select it deliberately, document credentials and cost
-controls, and verify representative language quality before the first product
-loop is considered complete.
+Workers AI is the first translation provider, isolated behind the replaceable
+`Translator` contract documented by ADR-056. The live slice translates at most
+two records per non-English source per retrieval and caches normalized results
+for five minutes. Local live use requires an authenticated Cloudflare account
+and can incur Workers AI usage.
 
 ### Current Preview Slice
 
@@ -53,6 +54,21 @@ loop is considered complete.
   to HTTPS.
 - This preview is an implemented feedback surface, not completion of the live
   aggregation loop.
+
+### Current Live Slice
+
+- The explicit roster contains BBC News in English, France 24 in French, and
+  NHK News in Japanese. This is a working ingestion slice, not representative
+  global coverage.
+- Feed responses are time- and size-bounded. Article URLs must use HTTPS and
+  match the configured publisher host allowlist.
+- Workers AI translates French and Japanese headline text to English while the
+  original text remains visible.
+- A normalized snapshot is cached for five minutes. `?refresh=1` bypasses the
+  read path for a manual refresh, and `?preview=1` retains the deterministic
+  synthetic interface.
+- Fetch or translation failures remove only that source's records and appear in
+  the page's partial-coverage block.
 
 ### Editorial Contract
 
@@ -106,17 +122,17 @@ loop is considered complete.
 
 - [x] A clearly labeled synthetic preview demonstrates the intended dashboard,
       multilingual metadata, and region filtering.
-- [ ] A configured set of official feeds or documented APIs produces normalized
+- [x] A configured set of official feeds or documented APIs produces normalized
       headline records through public source-adapter seams.
-- [ ] Non-English headline metadata is translated into English while original
+- [x] Non-English headline metadata is translated into English while original
       values remain available.
-- [ ] The dashboard renders fresh or explicitly timestamped cached results.
-- [ ] Source failures are isolated and visibly reported.
-- [ ] Every rendered headline includes publisher attribution and a canonical
+- [x] The dashboard renders fresh or explicitly timestamped cached results.
+- [x] Source failures are isolated and visibly reported.
+- [x] Every rendered headline includes publisher attribution and a canonical
       link to the original story.
-- [ ] The interface follows the documented brutalist, utilitarian direction and
+- [x] The interface follows the documented brutalist, utilitarian direction and
       meets the retained accessibility guardrails.
-- [ ] Unit tests cover normalization, translation decisions, ordering, and
+- [x] Unit tests cover normalization, translation decisions, ordering, and
       partial failure behavior.
 - [ ] Browser tests cover the closed loop from dashboard load to publisher link.
 - [ ] The repository quality gate passes.

@@ -88,6 +88,7 @@ No accepted-only ADRs are currently pending implementation.
 | [ADR-053](./implemented/ADR-053-adopt-local-ci-canonical-interface.md)                 | Implemented | Use Local CI's canonical package, executable, configuration, and agent-skill names.               |
 | [ADR-054](./implemented/ADR-054-target-a-compact-agent-skill-baseline.md)              | Implemented | Target capable agents with compact, retrieval-first skills and remove overlapping or unused ones. |
 | [ADR-055](./implemented/ADR-055-initialize-media-aggregator.md)                        | Implemented | Initialize the media aggregator while retaining the verified Cloudflare Worker baseline.          |
+| [ADR-056](./implemented/ADR-056-use-workers-ai-for-headline-translation.md)            | Implemented | Translate bounded live headline metadata through a replaceable Workers AI boundary.               |
 
 ## Creating A New ADR
 

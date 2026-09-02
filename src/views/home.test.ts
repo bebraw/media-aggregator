@@ -15,7 +15,7 @@ describe("renderHomePage", () => {
     expect(html).toContain("都市交通の新計画を発表");
     expect(html).toContain("JA → EN");
     expect(html).toContain("6 HEADLINES");
-    expect(html).toContain('href="/?region=europe"');
+    expect(html).toContain('href="/?preview=1&amp;region=europe"');
     expect(html).toContain('rel="stylesheet" href="/styles.css"');
     expect(html).toContain(`<meta name="description" content="A direct global view`);
     expect(html).toContain('<meta name="color-scheme" content="light">');

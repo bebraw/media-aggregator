@@ -1,4 +1,5 @@
 import { headlineRegions, type Headline, type RegionFilter } from "../news/preview-headlines";
+import { type SourceStatus } from "../news/load-headlines";
 import { escapeHtml } from "./shared";
 
 const appTitle = "GLOBAL HEADLINE INDEX";
@@ -7,18 +8,29 @@ const appDescription = "A direct global view of major headlines, translated into
 interface RenderHomePageOptions {
   headlines: readonly Headline[];
   activeRegion: RegionFilter;
+  mode?: "preview" | "live" | "cached" | "partial" | "error";
+  sources?: readonly SourceStatus[];
+  retrievedAt?: string | null;
 }
 
-export function renderHomePage({ headlines, activeRegion }: RenderHomePageOptions): string {
+export function renderHomePage({
+  headlines,
+  activeRegion,
+  mode = "preview",
+  sources = [],
+  retrievedAt = null,
+}: RenderHomePageOptions): string {
+  const isPreview = mode === "preview";
+  const previewQuery = isPreview ? "preview=1&" : "";
   const filters = headlineRegions
     .map((region) => {
       const isActive = region.slug === activeRegion;
-      const href = region.slug === "all" ? "/" : `/?region=${region.slug}`;
+      const href = region.slug === "all" ? (isPreview ? "/?preview=1" : "/") : `/?${previewQuery}region=${region.slug}`;
       const activeLabel = isActive ? `${region.label} / active` : region.label;
 
       return `<a
         class="border-r-2 border-app-line px-3 py-3 text-[0.68rem] font-black uppercase tracking-[0.12em] last:border-r-0 hover:bg-app-signal focus-visible:z-10 focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-app-blue sm:px-4"
-        href="${href}"
+        href="${escapeHtml(href)}"
         ${isActive ? 'aria-current="page"' : ""}
         aria-label="${escapeHtml(activeLabel)}"
       >${escapeHtml(region.label)}</a>`;
@@ -27,6 +39,14 @@ export function renderHomePage({ headlines, activeRegion }: RenderHomePageOption
 
   const headlineItems = headlines.map(renderHeadline).join("");
   const headlineCount = `${headlines.length} HEADLINE${headlines.length === 1 ? "" : "S"}`;
+  const liveSourceCount = sources.filter((source) => source.state === "live").length;
+  const modeLabel = mode === "preview" ? "PREVIEW DATA / NOT LIVE" : `${mode.toUpperCase()} DATA`;
+  const statusSummary = renderStatusSummary(mode, sources, retrievedAt);
+  const sourceFailures = renderSourceFailures(sources);
+  const emptyState =
+    headlines.length === 0
+      ? `<p class="border-b-2 border-app-line p-8 font-mono text-sm font-black uppercase">No live headlines available. Check the source status above.</p>`
+      : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -44,7 +64,7 @@ export function renderHomePage({ headlines, activeRegion }: RenderHomePageOption
     <header class="border-b-[3px] border-app-line">
       <div class="flex min-h-10 items-stretch justify-between border-b-2 border-app-line bg-app-text text-app-canvas">
         <p class="flex items-center px-3 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:px-5">Media aggregator / 001</p>
-        <p class="flex items-center border-l-2 border-app-canvas/40 bg-app-red px-3 font-mono text-[0.68rem] font-black uppercase tracking-[0.12em] text-white sm:px-5">PREVIEW DATA / NOT LIVE</p>
+        <p class="flex items-center border-l-2 border-app-canvas/40 ${mode === "live" || mode === "cached" ? "bg-app-blue" : "bg-app-red"} px-3 font-mono text-[0.68rem] font-black uppercase tracking-[0.12em] text-white sm:px-5">${escapeHtml(modeLabel)}</p>
       </div>
 
       <div class="grid lg:grid-cols-[minmax(0,1fr)_22rem]">
@@ -58,17 +78,15 @@ export function renderHomePage({ headlines, activeRegion }: RenderHomePageOption
             <dl class="grid grid-cols-2 border-2 border-app-line font-mono text-[0.68rem] uppercase">
               <div class="border-r-2 border-app-line p-3">
                 <dt class="text-app-muted">Mode</dt>
-                <dd class="mt-1 font-black">Local preview</dd>
+                <dd class="mt-1 font-black">${escapeHtml(mode === "preview" ? "Local preview" : mode)}</dd>
               </div>
               <div class="p-3">
                 <dt class="text-app-muted">Sources live</dt>
-                <dd class="mt-1 font-black">0 / 6</dd>
+                <dd class="mt-1 font-black">${liveSourceCount} / ${sources.length || 6}</dd>
               </div>
             </dl>
           </div>
-          <div class="border-t-2 border-app-line bg-app-signal p-4 font-mono text-xs font-black uppercase leading-5">
-            Synthetic headlines for interface review. Live feeds and translation are the next implementation boundary.
-          </div>
+          <div class="border-t-2 border-app-line bg-app-signal p-4 font-mono text-xs font-black uppercase leading-5">${statusSummary}</div>
         </div>
       </div>
 
@@ -78,22 +96,48 @@ export function renderHomePage({ headlines, activeRegion }: RenderHomePageOption
     </header>
 
     <main id="main">
+      ${sourceFailures}
       <section aria-labelledby="headline-count">
         <div class="flex items-center justify-between border-b-[3px] border-app-line px-4 py-3 sm:px-6">
           <h2 id="headline-count" class="font-mono text-xs font-black uppercase tracking-[0.16em]">Index / ${headlineCount}</h2>
           <p class="font-mono text-[0.68rem] font-bold uppercase text-app-muted">Order / newest first</p>
         </div>
-        <div>${headlineItems}</div>
+        <div>${headlineItems}${emptyState}</div>
       </section>
     </main>
 
     <footer class="grid border-t-[3px] border-app-line bg-app-text text-app-canvas sm:grid-cols-3">
-      <p class="border-b border-app-canvas/40 p-4 font-mono text-[0.68rem] uppercase sm:border-r sm:border-b-0">Build / interface review</p>
-      <p class="border-b border-app-canvas/40 p-4 font-mono text-[0.68rem] uppercase sm:border-r sm:border-b-0">Content / synthetic</p>
+      <p class="border-b border-app-canvas/40 p-4 font-mono text-[0.68rem] uppercase sm:border-r sm:border-b-0">Build / live feed slice</p>
+      <p class="border-b border-app-canvas/40 p-4 font-mono text-[0.68rem] uppercase sm:border-r sm:border-b-0">Content / ${escapeHtml(isPreview ? "synthetic" : "publisher feeds")}</p>
       <a class="p-4 font-mono text-[0.68rem] font-bold uppercase hover:bg-app-blue focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-app-signal" href="/api/health">System health ↗</a>
     </footer>
   </body>
 </html>`;
+}
+
+function renderStatusSummary(
+  mode: NonNullable<RenderHomePageOptions["mode"]>,
+  sources: readonly SourceStatus[],
+  retrievedAt: string | null,
+): string {
+  if (mode === "preview") return "Synthetic headlines for interface review. Add ?preview=1 to return here.";
+  const timestamp = retrievedAt ? new Date(retrievedAt).toISOString().replace("T", " ").slice(0, 19) + " UTC" : "unknown";
+  return `${mode === "cached" ? "Cached snapshot" : "Feed retrieval"} / ${escapeHtml(timestamp)} / ${sources.length} configured sources`;
+}
+
+function renderSourceFailures(sources: readonly SourceStatus[]): string {
+  const failures = sources.filter((source) => source.state === "error");
+  if (failures.length === 0) return "";
+
+  return `<section aria-label="Source failures" class="border-b-[3px] border-app-line bg-app-red text-white">
+    <p class="px-4 py-2 font-mono text-xs font-black uppercase sm:px-6">Partial coverage / ${failures.length} source${failures.length === 1 ? "" : "s"} unavailable</p>
+    <ul class="border-t border-white/40">${failures
+      .map(
+        (source) =>
+          `<li class="grid gap-1 border-b border-white/40 px-4 py-2 font-mono text-[0.68rem] uppercase last:border-b-0 sm:grid-cols-[10rem_1fr] sm:px-6"><strong>${escapeHtml(source.name)}</strong><span>${escapeHtml(source.message)}</span></li>`,
+      )
+      .join("")}</ul>
+  </section>`;
 }
 
 function renderHeadline(headline: Headline, index: number): string {

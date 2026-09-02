@@ -16,6 +16,7 @@ export interface Headline {
   region: Exclude<(typeof headlineRegions)[number]["label"], "All regions">;
   language: string;
   languageCode: string;
+  publishedAt?: string | null;
   publishedLabel: string;
   translatedHeadline: string;
   originalHeadline: string;
@@ -96,10 +97,14 @@ export function parseRegionFilter(value: string | null): RegionFilter {
 }
 
 export function selectPreviewHeadlines(region: RegionFilter): readonly Headline[] {
+  return selectHeadlines(previewHeadlines, region);
+}
+
+export function selectHeadlines(headlines: readonly Headline[], region: RegionFilter): readonly Headline[] {
   if (region === "all") {
-    return previewHeadlines;
+    return headlines;
   }
 
   const selectedRegion = headlineRegions.find((candidate) => candidate.slug === region);
-  return previewHeadlines.filter((headline) => headline.region === selectedRegion?.label);
+  return headlines.filter((headline) => headline.region === selectedRegion?.label);
 }
